@@ -319,4 +319,105 @@
         currentSource.connect(gain); gain.connect(audioCtx.destination);
         currentSource.start(0, startTime, endTime-startTime); isAudioPlaying = true;
         document.getElementById('playIcon').className = 'fa-solid fa-square';
-        document.getE
+        document.getElementById('previewBtn').innerHTML = '<i class="fa-solid fa-square"></i> توقف پخش';
+        currentSource.onended = () => stopAudioPreview();
+      }
+    }
+    function stopAudioPreview() {
+      if(currentSource){ try{currentSource.stop()}catch(e){} currentSource.disconnect(); currentSource=null;}
+      isAudioPlaying = false; document.getElementById('playIcon').className = 'fa-solid fa-play';
+      document.getElementById('previewBtn').innerHTML = '<i class="fa-solid fa-play"></i> پخش بازه انتخابی';
+    }
+
+    async function exportAudio(format) {
+      if(!audioBuffer) return; initAudioCtx(); stopAudioPreview();
+      const speed = parseFloat(document.getElementById('speedSlider').value);
+      const offlineCtx = new OfflineAudioContext(audioBuffer.numberOfChannels, Math.ceil(audioBuffer.sampleRate*((endTime-startTime)/speed)), audioBuffer.sampleRate);
+      const src = offlineCtx.createBufferSource(); src.buffer = audioBuffer; src.playbackRate.value = speed;
+      const gain = offlineCtx.createGain(); gain.gain.value = parseFloat(document.getElementById('volumeSlider').value)/100;
+      src.connect(gain); gain.connect(offlineCtx.destination); src.start(0, startTime, endTime-startTime);
+      const rendered = await offlineCtx.startRendering();
+      let n = rendered.numberOfChannels, len = rendered.length*n*2+44, dv = new DataView(new ArrayBuffer(len)), p = 0;
+      const w16=d=>{dv.setUint16(p,d,true);p+=2;}, w32=d=>{dv.setUint32(p,d,true);p+=4;};
+      w32(0x46464952);w32(len-8);w32(0x45564157);w32(0x20746d66);w32(16);w16(1);w16(n);w32(rendered.sampleRate);w32(rendered.sampleRate*2*n);w16(n*2);w16(16);w32(0x61746164);w32(len-p-4);
+      for(let i=0;i<n;i++){ let ch=rendered.getChannelData(i), o=0; while(o<rendered.length){ let s=Math.max(-1,Math.min(1,ch[o])); s=(s<0?s*32768:s*32767)|0; dv.setInt16(p,s,true); p+=2; o++; } }
+      const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([dv.buffer],{type:'audio/wav'}));
+      a.download = format==='ogg'?'voice-oajor.ogg':'audio-oajor.wav'; a.click();
+    }
+
+    // ========== VIDEO ==========
+    let camStream=null, vidRec=null, vidChunks=[], isCamRec=false, rawVid=document.getElementById('hiddenRawVideo');
+    let circCvs=document.getElementById('circleVideoCanvas'), circCtx=circCvs.getContext('2d'), vStart=0, vEnd=0, animId=null;
+
+    async function toggleCameraRecord() {
+      if(document.getElementById('cameraStreamBox').classList.contains('hidden')) {
+        try {
+          camStream = await navigator.mediaDevices.getUserMedia({ video: {facingMode:'user'}, audio:true });
+          document.getElementById('liveVideoPreview').srcObject = camStream;
+          document.getElementById('cameraStreamBox').classList.remove('hidden');
+          document.getElementById('camStatus').innerText = 'دوربین فعال شد';
+        } catch(e) { alert('دسترسی دوربین مسدود است.'); }
+      } else { stopCamera(); }
+    }
+    function stopCamera() {
+      if(camStream){ camStream.getTracks().forEach(t=>t.stop()); camStream=null; }
+      document.getElementById('cameraStreamBox').classList.add('hidden');
+      document.getElementById('camStatus').innerText = 'ضبط ویدیوی سلفی دایره‌ای';
+    }
+    function startOrStopRecordingCamera() {
+      if(!isCamRec) {
+        vidChunks=[]; vidRec=new MediaRecorder(camStream);
+        vidRec.ondataavailable=e=>{if(e.data.size>0)vidChunks.push(e.data);};
+        vidRec.onstop=()=>{ setupVideo(URL.createObjectURL(new Blob(vidChunks,{type:'video/mp4'})), "سلفی"); stopCamera(); };
+        vidRec.start(); isCamRec=true; document.getElementById('triggerCamRecBtn').innerHTML='<i class="fa-solid fa-stop"></i> پایان و ویرایش';
+      } else { vidRec.stop(); isCamRec=false; document.getElementById('triggerCamRecBtn').innerHTML='<i class="fa-solid fa-circle-dot"></i> شروع ضبط'; }
+    }
+
+    function handleVideoUpload(e) {
+      if(!e.target.files[0]) return; document.getElementById('videoFileName').innerText=e.target.files[0].name;
+      setupVideo(URL.createObjectURL(e.target.files[0]), e.target.files[0].name);
+    }
+    function setupVideo(url, title) {
+      rawVid.src=url; rawVid.onloadedmetadata=()=>{
+        vStart=0; vEnd=Math.min(60,rawVid.duration);
+        document.getElementById('vStartSlider').max=rawVid.duration; document.getElementById('vStartSlider').value=0;
+        document.getElementById('vEndSlider').max=rawVid.duration; document.getElementById('vEndSlider').value=vEnd;
+        document.getElementById('videoDurationLabel').innerText='مدت: '+formatSec(rawVid.duration);
+        updateVideoTrims(); document.getElementById('videoEditorPanel').classList.remove('hidden'); renderCircle();
+      };
+    }
+    function updateVideoTrims() {
+      let s=parseFloat(document.getElementById('vStartSlider').value), e=parseFloat(document.getElementById('vEndSlider').value);
+      if(s>=e){s=Math.max(0,e-0.5); document.getElementById('vStartSlider').value=s;}
+      vStart=s; vEnd=e; document.getElementById('vStartTimeLabel').innerText=formatSec(vStart); document.getElementById('vEndTimeLabel').innerText=formatSec(vEnd);
+      rawVid.currentTime=vStart; renderCircle();
+    }
+    function renderCircle() {
+      circCtx.clearRect(0,0,400,400); const minD = Math.min(rawVid.videoWidth, rawVid.videoHeight);
+      circCtx.save(); circCtx.beginPath(); circCtx.arc(200,200,200,0,Math.PI*2); circCtx.clip();
+      circCtx.drawImage(rawVid, (rawVid.videoWidth-minD)/2, (rawVid.videoHeight-minD)/2, minD, minD, 0,0,400,400); circCtx.restore();
+    }
+    function toggleVideoPlayback() {
+      if(rawVid.paused){ rawVid.currentTime=vStart; rawVid.play(); document.getElementById('vPlayBtn').innerHTML='<i class="fa-solid fa-square"></i> توقف'; playLoop(); }
+      else { rawVid.pause(); cancelAnimationFrame(animId); document.getElementById('vPlayBtn').innerHTML='<i class="fa-solid fa-play"></i> تست'; }
+    }
+    function playLoop() {
+      if(!rawVid.paused){ renderCircle(); if(rawVid.currentTime>=vEnd)rawVid.currentTime=vStart; animId=requestAnimationFrame(playLoop); }
+    }
+    async function renderAndDownloadRoundVideo() {
+      rawVid.pause(); cancelAnimationFrame(animId); const btn = document.getElementById('downloadRoundBtn');
+      btn.innerHTML='در حال پردازش...'; btn.disabled=true;
+      const stream=circCvs.captureStream(30); try{if(rawVid.captureStream().getAudioTracks().length)stream.addTrack(rawVid.captureStream().getAudioTracks()[0]);}catch(e){}
+      const rec = new MediaRecorder(stream,{mimeType:'video/webm'}); const ch=[];
+      rec.ondataavailable=e=>{if(e.data.size>0)ch.push(e.data);};
+      rec.onstop=()=>{
+        const a=document.createElement('a'); a.href=URL.createObjectURL(new Blob(ch,{type:'video/mp4'})); a.download='round-video.mp4'; a.click();
+        btn.innerHTML='دانلود ویدیوی گرد'; btn.disabled=false;
+      };
+      rawVid.currentTime=vStart; await rawVid.play(); rec.start();
+      function recLoop(){ if(!rawVid.paused && rawVid.currentTime<vEnd){renderCircle(); requestAnimationFrame(recLoop);}else{rawVid.pause(); rec.stop();} }
+      recLoop();
+    }
+  </script>
+</body>
+</html>
