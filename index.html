@@ -3,13 +3,18 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>استودیو برش و تبدیل ویس | اثر @oajor</title>
+  <title>استودیو تلگرام | ویس و ویدیو گرد @oajor</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet">
   <style>
     body { font-family: 'Vazirmatn', sans-serif; }
     input[type=range] { accent-color: #6366f1; }
+    .pulse-rec { animation: pulse 1.5s infinite; }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.8; transform: scale(1.04); }
+    }
   </style>
 </head>
 <body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col justify-between items-center p-3 sm:p-5">
@@ -18,11 +23,11 @@
   <header class="w-full max-w-2xl flex flex-col sm:flex-row items-center justify-between py-4 border-b border-slate-800 gap-3">
     <div class="flex items-center gap-3">
       <div class="w-11 h-11 rounded-2xl bg-indigo-600 flex items-center justify-center text-xl shadow-lg shadow-indigo-500/30">
-        <i class="fa-solid fa-scissors text-white"></i>
+        <i class="fa-solid fa-wand-magic-sparkles text-white"></i>
       </div>
       <div>
-        <h1 class="text-lg sm:text-xl font-bold bg-gradient-to-r from-indigo-400 via-purple-300 to-pink-400 bg-clip-text text-transparent">برش و تبدیل حرفه‌ای صدا</h1>
-        <p class="text-xs text-slate-400">کات سریع، تقویت ولوم و خروجی بدون افت کیفیت</p>
+        <h1 class="text-lg sm:text-xl font-bold bg-gradient-to-r from-indigo-400 via-purple-300 to-pink-400 bg-clip-text text-transparent">سوپر استودیو تلگرام</h1>
+        <p class="text-xs text-slate-400">برش ویس، تقویت صدا و ساخت ویدیو گرد تلگرامی</p>
       </div>
     </div>
 
@@ -33,100 +38,193 @@
     </a>
   </header>
 
-  <!-- Main Box -->
-  <main class="w-full max-w-2xl my-5 flex flex-col gap-4">
+  <!-- Mode Switch Tabs -->
+  <div class="w-full max-w-2xl grid grid-cols-2 gap-2 mt-4 p-1 bg-slate-900/90 border border-slate-800 rounded-2xl">
+    <button id="tabAudioBtn" onclick="switchTab('audio')" class="py-2.5 rounded-xl font-bold text-xs sm:text-sm flex items-center justify-center gap-2 bg-indigo-600 text-white transition-all shadow-md">
+      <i class="fa-solid fa-microphone-lines"></i> ادیت و ضبط ویس
+    </button>
+    <button id="tabVideoBtn" onclick="switchTab('video')" class="py-2.5 rounded-xl font-bold text-xs sm:text-sm flex items-center justify-center gap-2 text-slate-400 hover:text-white transition-all">
+      <i class="fa-solid fa-circle-play"></i> ویدیو گرد تلگرام (Note)
+    </button>
+  </div>
 
-    <!-- Guide Box (راهنمای استفاده ساده) -->
-    <div class="bg-slate-900/60 border border-slate-800/80 p-3.5 rounded-2xl flex flex-col gap-2">
-      <div class="flex items-center gap-2 text-indigo-400 text-xs font-bold">
-        <i class="fa-solid fa-circle-info"></i>
-        <span>راهنمای ۳ مرحله‌ای استفاده:</span>
+  <!-- Main Container -->
+  <main class="w-full max-w-2xl my-4 flex flex-col gap-4">
+
+    <!-- ==================== TAB 1: AUDIO SECTION ==================== -->
+    <div id="audioSection" class="flex flex-col gap-4">
+
+      <!-- Action: Record Voice or Upload Audio -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <!-- Record Voice -->
+        <div class="bg-slate-900/90 border border-slate-800 p-5 rounded-2xl flex flex-col items-center justify-center text-center gap-3">
+          <button id="recordBtn" onclick="toggleAudioRecording()" class="w-16 h-16 rounded-full bg-rose-600 hover:bg-rose-500 flex items-center justify-center text-2xl text-white shadow-lg shadow-rose-600/40 transition-all">
+            <i id="recordIcon" class="fa-solid fa-microphone"></i>
+          </button>
+          <div>
+            <div id="recordStatus" class="font-bold text-sm text-rose-400">شروع ضبط ویس</div>
+            <p id="recordTimer" class="text-xs text-slate-400 font-mono mt-0.5">برای شروع صحبت کلیک کنید</p>
+          </div>
+        </div>
+
+        <!-- Upload Audio File -->
+        <label class="bg-slate-900/90 border border-dashed border-slate-800 hover:border-indigo-500/60 p-5 rounded-2xl flex flex-col items-center justify-center text-center gap-2 cursor-pointer transition-all">
+          <div class="w-12 h-12 rounded-full bg-indigo-600/20 flex items-center justify-center">
+            <i class="fa-solid fa-cloud-arrow-up text-indigo-400 text-xl"></i>
+          </div>
+          <div>
+            <div class="font-semibold text-xs sm:text-sm text-indigo-300">انتخاب فایل از گوشی</div>
+            <p class="text-[11px] text-slate-500 mt-0.5">MP3, WAV, OGG, M4A یا ویس ذخیره‌شده</p>
+          </div>
+          <span id="audioTrackName" class="text-[11px] text-indigo-400 font-mono truncate max-w-[200px]">فایلی انتخاب نشده</span>
+          <input type="file" id="audioFileInput" accept="audio/*" class="hidden" onchange="handleAudioUpload(event)">
+        </label>
       </div>
-      <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 text-[11px] text-slate-300">
-        <div class="bg-slate-950/60 p-2.5 rounded-xl border border-slate-800/50 flex items-start gap-2">
-          <span class="w-5 h-5 rounded-full bg-indigo-600/30 text-indigo-400 flex items-center justify-center font-bold text-[10px] shrink-0">۱</span>
-          <span>فایل آهنگ، ویس یا صدای دلخواهتان را بارگذاری کنید.</span>
+
+      <!-- Audio Editor Panel -->
+      <div id="audioEditorPanel" class="hidden bg-slate-900/90 border border-slate-800 p-4 rounded-2xl flex flex-col gap-4">
+        <div class="flex items-center justify-between text-xs text-slate-400">
+          <span class="font-bold text-indigo-300 flex items-center gap-1.5">
+            <i class="fa-solid fa-sliders"></i> پنل برش و تنظیمات صدا:
+          </span>
+          <span id="audioDurationLabel" class="font-mono text-slate-400">00:00.0</span>
         </div>
-        <div class="bg-slate-950/60 p-2.5 rounded-xl border border-slate-800/50 flex items-start gap-2">
-          <span class="w-5 h-5 rounded-full bg-indigo-600/30 text-indigo-400 flex items-center justify-center font-bold text-[10px] shrink-0">۲</span>
-          <span>با اسلایدرها ثانیه شروع و پایان را انتخاب کرده و ولوم را تنظیم کنید.</span>
+
+        <div class="relative w-full h-24 bg-slate-950 rounded-xl overflow-hidden border border-slate-800/80">
+          <canvas id="waveformCanvas" class="w-full h-full block"></canvas>
         </div>
-        <div class="bg-slate-950/60 p-2.5 rounded-xl border border-slate-800/50 flex items-start gap-2">
-          <span class="w-5 h-5 rounded-full bg-indigo-600/30 text-indigo-400 flex items-center justify-center font-bold text-[10px] shrink-0">۳</span>
-          <span>روی خروجی <strong>WAV</strong> یا <strong>ویس تلگرام</strong> کلیک و ذخیره کنید.</span>
+
+        <div class="grid grid-cols-2 gap-3 bg-slate-950/60 p-3 rounded-xl border border-slate-800/60">
+          <div>
+            <div class="flex justify-between text-xs text-slate-400 mb-1">
+              <span>شروع برش:</span>
+              <span id="startTimeLabel" class="font-mono text-indigo-400 font-bold">00:00.0</span>
+            </div>
+            <input type="range" id="startSlider" min="0" max="100" step="0.1" value="0" class="w-full" oninput="updateAudioTrims()">
+          </div>
+          <div>
+            <div class="flex justify-between text-xs text-slate-400 mb-1">
+              <span>پایان برش:</span>
+              <span id="endTimeLabel" class="font-mono text-indigo-400 font-bold">00:00.0</span>
+            </div>
+            <input type="range" id="endSlider" min="0" max="100" step="0.1" value="100" class="w-full" oninput="updateAudioTrims()">
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div class="bg-slate-950/40 p-3 rounded-xl border border-slate-800/40">
+            <div class="flex justify-between text-xs text-slate-400 mb-1">
+              <span>تقویت ولوم (Volume):</span>
+              <span id="volLabel" class="font-mono text-emerald-400 font-bold">100%</span>
+            </div>
+            <input type="range" id="volumeSlider" min="50" max="250" step="5" value="100" class="w-full" oninput="document.getElementById('volLabel').innerText = this.value + '%'">
+          </div>
+          <div class="bg-slate-950/40 p-3 rounded-xl border border-slate-800/40">
+            <div class="flex justify-between text-xs text-slate-400 mb-1">
+              <span>سرعت پخش:</span>
+              <span id="speedLabel" class="font-mono text-amber-400 font-bold">1.0x</span>
+            </div>
+            <input type="range" id="speedSlider" min="0.5" max="2.0" step="0.05" value="1.0" class="w-full" oninput="document.getElementById('speedLabel').innerText = parseFloat(this.value).toFixed(2) + 'x'">
+          </div>
+        </div>
+
+        <button id="previewBtn" onclick="toggleAudioPreview()" class="w-full py-3 px-4 rounded-xl bg-indigo-600 hover:bg-indigo-500 font-medium text-xs sm:text-sm flex items-center justify-center gap-2 transition-all shadow-lg shadow-indigo-600/30">
+          <i id="playIcon" class="fa-solid fa-play"></i> پخش و تست بازه انتخابی
+        </button>
+
+        <div class="grid grid-cols-2 gap-3 pt-2 border-t border-slate-800">
+          <button onclick="exportAudio('wav')" class="py-3 px-3 rounded-xl bg-sky-600 hover:bg-sky-500 font-medium text-xs flex items-center justify-center gap-2 transition-all shadow-lg shadow-sky-600/30">
+            <i class="fa-solid fa-file-waveform"></i> دانلود کیفیت اصلی (WAV)
+          </button>
+          <button onclick="exportAudio('ogg')" class="py-3 px-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 font-medium text-xs flex items-center justify-center gap-2 transition-all shadow-lg shadow-emerald-600/30">
+            <i class="fa-solid fa-microphone-lines"></i> دانلود ویس تلگرام (.OGG)
+          </button>
         </div>
       </div>
     </div>
 
-    <!-- Upload Box -->
-    <label class="bg-slate-900/90 border-2 border-dashed border-slate-800 hover:border-indigo-500/60 p-6 rounded-2xl flex flex-col items-center justify-center text-center gap-3 cursor-pointer transition-all">
-      <div class="w-14 h-14 rounded-full bg-indigo-600/20 flex items-center justify-center">
-        <i class="fa-solid fa-file-audio text-indigo-400 text-2xl"></i>
-      </div>
-      <div>
-        <div class="font-semibold text-sm text-indigo-300">انتخاب یا رها کردن فایل صوتی</div>
-        <p class="text-xs text-slate-500 mt-1">پشتیبانی از انواع فرمت‌های MP3, WAV, OGG, M4A</p>
-      </div>
-      <span id="audioTrackName" class="text-xs text-indigo-400 font-mono font-medium truncate max-w-[280px]">هنوز فایلی انتخاب نشده</span>
-      <input type="file" id="audioFileInput" accept="audio/*" class="hidden" onchange="handleFileUpload(event)">
-    </label>
 
-    <!-- Waveform & Trimmer Container -->
-    <div id="editorPanel" class="hidden bg-slate-900/90 border border-slate-800 p-4 rounded-2xl flex flex-col gap-4">
-      
-      <!-- Waveform Canvas -->
-      <div class="relative w-full h-24 bg-slate-950 rounded-xl overflow-hidden border border-slate-800/80">
-        <canvas id="waveformCanvas" class="w-full h-full block"></canvas>
-      </div>
+    <!-- ==================== TAB 2: ROUND VIDEO SECTION ==================== -->
+    <div id="videoSection" class="hidden flex flex-col gap-4">
 
-      <!-- Trim Controls (Start & End) -->
-      <div class="grid grid-cols-2 gap-3 bg-slate-950/60 p-3 rounded-xl border border-slate-800/60">
-        <div>
-          <div class="flex justify-between text-xs text-slate-400 mb-1">
-            <span>نقطه شروع برش:</span>
-            <span id="startTimeLabel" class="font-mono text-indigo-400 font-bold">00:00.0</span>
+      <!-- Action: Record Camera or Upload Video -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <!-- Live Camera Record -->
+        <div class="bg-slate-900/90 border border-slate-800 p-5 rounded-2xl flex flex-col items-center justify-center text-center gap-3">
+          <button id="camRecordBtn" onclick="toggleCameraRecord()" class="w-16 h-16 rounded-full bg-indigo-600 hover:bg-indigo-500 flex items-center justify-center text-2xl text-white shadow-lg shadow-indigo-600/40 transition-all">
+            <i id="camRecordIcon" class="fa-solid fa-video"></i>
+          </button>
+          <div>
+            <div id="camStatus" class="font-bold text-sm text-indigo-300">ضبط ویدیوی سلفی دایره‌ای</div>
+            <p id="camTimer" class="text-xs text-slate-400 font-mono mt-0.5">ضربه برای روشن کردن دوربین</p>
           </div>
-          <input type="range" id="startSlider" min="0" max="100" step="0.1" value="0" class="w-full" oninput="updateTrims()">
         </div>
-        <div>
-          <div class="flex justify-between text-xs text-slate-400 mb-1">
-            <span>نقطه پایان برش:</span>
-            <span id="endTimeLabel" class="font-mono text-indigo-400 font-bold">00:00.0</span>
+
+        <!-- Upload Video File -->
+        <label class="bg-slate-900/90 border border-dashed border-slate-800 hover:border-purple-500/60 p-5 rounded-2xl flex flex-col items-center justify-center text-center gap-2 cursor-pointer transition-all">
+          <div class="w-12 h-12 rounded-full bg-purple-600/20 flex items-center justify-center">
+            <i class="fa-solid fa-film text-purple-400 text-xl"></i>
           </div>
-          <input type="range" id="endSlider" min="0" max="100" step="0.1" value="100" class="w-full" oninput="updateTrims()">
-        </div>
+          <div>
+            <div class="font-semibold text-xs sm:text-sm text-purple-300">تبدیل ویدیو گالری به گرد</div>
+            <p class="text-[11px] text-slate-500 mt-0.5">کراپ خودکار هر ویدیو به مربع و دایره تلگرام</p>
+          </div>
+          <span id="videoFileName" class="text-[11px] text-purple-400 font-mono truncate max-w-[200px]">ویدیویی انتخاب نشده</span>
+          <input type="file" id="videoFileInput" accept="video/*" class="hidden" onchange="handleVideoUpload(event)">
+        </label>
       </div>
 
-      <!-- Settings: Volume & Speed -->
-      <div class="grid grid-cols-2 gap-3">
-        <div class="bg-slate-950/40 p-3 rounded-xl border border-slate-800/40">
-          <div class="flex justify-between text-xs text-slate-400 mb-1">
-            <span>تقویت بلندی صدا (Volume):</span>
-            <span id="volLabel" class="font-mono text-emerald-400 font-bold">100%</span>
-          </div>
-          <input type="range" id="volumeSlider" min="50" max="250" step="5" value="100" class="w-full" oninput="document.getElementById('volLabel').innerText = this.value + '%'">
+      <!-- Live Camera Stream Box -->
+      <div id="cameraStreamBox" class="hidden bg-slate-900/90 border border-slate-800 p-4 rounded-2xl flex flex-col items-center gap-3">
+        <div class="relative w-56 h-56 rounded-full overflow-hidden border-4 border-indigo-500 shadow-2xl shadow-indigo-500/30 bg-black">
+          <video id="liveVideoPreview" autoplay muted playsinline class="w-full h-full object-cover -scale-x-100"></video>
         </div>
-        <div class="bg-slate-950/40 p-3 rounded-xl border border-slate-800/40">
-          <div class="flex justify-between text-xs text-slate-400 mb-1">
-            <span>سرعت صدا (Speed):</span>
-            <span id="speedLabel" class="font-mono text-amber-400 font-bold">1.0x</span>
-          </div>
-          <input type="range" id="speedSlider" min="0.5" max="2.0" step="0.05" value="1.0" class="w-full" oninput="document.getElementById('speedLabel').innerText = parseFloat(this.value).toFixed(2) + 'x'">
-        </div>
-      </div>
-
-      <!-- Play / Stop Preview -->
-      <button id="previewBtn" onclick="togglePreview()" class="w-full py-3 px-4 rounded-xl bg-indigo-600 hover:bg-indigo-500 font-medium text-xs sm:text-sm flex items-center justify-center gap-2 transition-all shadow-lg shadow-indigo-600/30">
-        <i id="playIcon" class="fa-solid fa-play"></i> پخش بازه انتخاب‌شده (تست برش)
-      </button>
-
-      <!-- Download Options -->
-      <div class="grid grid-cols-2 gap-3 pt-2 border-t border-slate-800">
-        <button onclick="exportAudio('wav')" class="py-3 px-3 rounded-xl bg-sky-600 hover:bg-sky-500 font-medium text-xs flex items-center justify-center gap-2 transition-all shadow-lg shadow-sky-600/30">
-          <i class="fa-solid fa-file-waveform"></i> دانلود کیفیت اصلی (WAV)
+        <button id="triggerCamRecBtn" onclick="startOrStopRecordingCamera()" class="py-2.5 px-6 rounded-full bg-rose-600 hover:bg-rose-500 font-bold text-xs flex items-center gap-2 shadow-lg shadow-rose-600/30">
+          <i class="fa-solid fa-circle-dot"></i> شروع ضبط (حداکثر ۶۰ ثانیه)
         </button>
-        <button onclick="exportAudio('ogg')" class="py-3 px-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 font-medium text-xs flex items-center justify-center gap-2 transition-all shadow-lg shadow-emerald-600/30">
-          <i class="fa-solid fa-microphone-lines"></i> دانلود ویس تلگرام (.OGG)
+      </div>
+
+      <!-- Video Crop & Processing Panel -->
+      <div id="videoEditorPanel" class="hidden bg-slate-900/90 border border-slate-800 p-4 rounded-2xl flex flex-col items-center gap-4">
+        
+        <div class="w-full flex items-center justify-between text-xs text-slate-400">
+          <span class="font-bold text-purple-300 flex items-center gap-1.5">
+            <i class="fa-solid fa-eye"></i> پیش‌نمایش خروجی ویدیو مسیج:
+          </span>
+          <span id="videoDurationLabel" class="font-mono text-slate-400">00:00</span>
+        </div>
+
+        <!-- Round Video Preview Canvas (Exact 1:1 Circle) -->
+        <div class="relative w-64 h-64 rounded-full overflow-hidden border-4 border-purple-500 shadow-2xl shadow-purple-500/30 bg-black flex items-center justify-center">
+          <canvas id="circleVideoCanvas" width="400" height="400" class="w-full h-full object-cover"></canvas>
+        </div>
+
+        <video id="hiddenRawVideo" playsinline class="hidden"></video>
+
+        <!-- Video Trim Sliders -->
+        <div class="w-full grid grid-cols-2 gap-3 bg-slate-950/60 p-3 rounded-xl border border-slate-800/60">
+          <div>
+            <div class="flex justify-between text-xs text-slate-400 mb-1">
+              <span>شروع برش:</span>
+              <span id="vStartTimeLabel" class="font-mono text-purple-400 font-bold">00:00.0</span>
+            </div>
+            <input type="range" id="vStartSlider" min="0" max="100" step="0.2" value="0" class="w-full" oninput="updateVideoTrims()">
+          </div>
+          <div>
+            <div class="flex justify-between text-xs text-slate-400 mb-1">
+              <span>پایان برش:</span>
+              <span id="vEndTimeLabel" class="font-mono text-purple-400 font-bold">00:00.0</span>
+            </div>
+            <input type="range" id="vEndSlider" min="0" max="100" step="0.2" value="100" class="w-full" oninput="updateVideoTrims()">
+          </div>
+        </div>
+
+        <button onclick="toggleVideoPlayback()" id="vPlayBtn" class="w-full py-3 px-4 rounded-xl bg-purple-600 hover:bg-purple-500 font-medium text-xs sm:text-sm flex items-center justify-center gap-2 transition-all shadow-lg shadow-purple-600/30">
+          <i id="vPlayIcon" class="fa-solid fa-play"></i> پخش و تست ویدیوی گرد
+        </button>
+
+        <button onclick="renderAndDownloadRoundVideo()" id="downloadRoundBtn" class="w-full py-3.5 px-4 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 font-bold text-xs sm:text-sm flex items-center justify-center gap-2 transition-all shadow-xl shadow-emerald-600/30">
+          <i class="fa-solid fa-cloud-arrow-down text-base"></i> تبدیل نهایی و دانلود ویدیوی گرد (آماده تلگرام)
         </button>
       </div>
 
@@ -140,198 +238,136 @@
   </footer>
 
   <script>
-    let audioCtx = null, audioBuffer = null, currentSource = null, isPlaying = false;
-    let startTime = 0, endTime = 0;
+    // --- مدیریت تب‌ها ---
+    function switchTab(mode) {
+      const aSec = document.getElementById('audioSection');
+      const vSec = document.getElementById('videoSection');
+      const aBtn = document.getElementById('tabAudioBtn');
+      const vBtn = document.getElementById('tabVideoBtn');
 
-    function initCtx() {
+      if (mode === 'audio') {
+        aSec.classList.remove('hidden');
+        vSec.classList.add('hidden');
+        aBtn.className = 'py-2.5 rounded-xl font-bold text-xs sm:text-sm flex items-center justify-center gap-2 bg-indigo-600 text-white transition-all shadow-md';
+        vBtn.className = 'py-2.5 rounded-xl font-bold text-xs sm:text-sm flex items-center justify-center gap-2 text-slate-400 hover:text-white transition-all';
+        stopCamera();
+      } else {
+        aSec.classList.add('hidden');
+        vSec.classList.remove('hidden');
+        vBtn.className = 'py-2.5 rounded-xl font-bold text-xs sm:text-sm flex items-center justify-center gap-2 bg-purple-600 text-white transition-all shadow-md';
+        aBtn.className = 'py-2.5 rounded-xl font-bold text-xs sm:text-sm flex items-center justify-center gap-2 text-slate-400 hover:text-white transition-all';
+        stopAudioPreview();
+      }
+    }
+
+    // ==========================================
+    // =========== بخش اول: ویس و صوت ============
+    // ==========================================
+    let audioCtx = null, audioBuffer = null, currentSource = null, isAudioPlaying = false;
+    let startTime = 0, endTime = 0;
+    let audioRecorder = null, audioChunks = [], isRecordingAudio = false, recTimerInterval = null, recSeconds = 0;
+
+    function initAudioCtx() {
       if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
       if (audioCtx.state === 'suspended') audioCtx.resume();
     }
 
-    async function handleFileUpload(e) {
-      const file = e.target.files[0];
-      if (!file) return;
-      initCtx();
-      document.getElementById('audioTrackName').innerText = file.name;
-      const arrayBuffer = await file.arrayBuffer();
-      audioBuffer = await audioCtx.decodeAudioData(arrayBuffer);
-
-      startTime = 0;
-      endTime = audioBuffer.duration;
-
-      const startSlider = document.getElementById('startSlider');
-      const endSlider = document.getElementById('endSlider');
-      startSlider.max = audioBuffer.duration;
-      startSlider.value = 0;
-      endSlider.max = audioBuffer.duration;
-      endSlider.value = audioBuffer.duration;
-
-      updateTimeLabels();
-      drawWaveform();
-      document.getElementById('editorPanel').classList.remove('hidden');
+    async function toggleAudioRecording() {
+      isRecordingAudio ? stopAudioRecording() : startAudioRecording();
     }
 
-    function formatTime(s) {
+    async function startAudioRecording() {
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        audioRecorder = new MediaRecorder(stream);
+        audioChunks = [];
+
+        audioRecorder.ondataavailable = e => { if (e.data.size > 0) audioChunks.push(e.data); };
+        audioRecorder.onstop = async () => {
+          const blob = new Blob(audioChunks, { type: 'audio/webm' });
+          const ab = await blob.arrayBuffer();
+          initAudioCtx();
+          audioBuffer = await audioCtx.decodeAudioData(ab);
+          loadBufferIntoAudioEditor("ویس ضبط‌شده");
+          stream.getTracks().forEach(t => t.stop());
+        };
+
+        audioRecorder.start();
+        isRecordingAudio = true;
+        recSeconds = 0;
+        document.getElementById('recordBtn').classList.add('pulse-rec', 'bg-red-700');
+        document.getElementById('recordIcon').className = 'fa-solid fa-stop';
+        document.getElementById('recordStatus').innerText = 'در حال ضبط ویس... (کلیک برای اتمام)';
+        
+        recTimerInterval = setInterval(() => {
+          recSeconds++;
+          const m = String(Math.floor(recSeconds / 60)).padStart(2, '0');
+          const s = String(recSeconds % 60).padStart(2, '0');
+          document.getElementById('recordTimer').innerText = `${m}:${s}`;
+        }, 1000);
+
+      } catch (err) {
+        alert('لطفاً دسترسی میکروفون را در مرورگر فعال کنید.');
+      }
+    }
+
+    function stopAudioRecording() {
+      if (audioRecorder && isRecordingAudio) {
+        audioRecorder.stop();
+        isRecordingAudio = false;
+        clearInterval(recTimerInterval);
+        document.getElementById('recordBtn').classList.remove('pulse-rec', 'bg-red-700');
+        document.getElementById('recordIcon').className = 'fa-solid fa-microphone';
+        document.getElementById('recordStatus').innerText = 'ضبط تکمیل شد';
+        document.getElementById('recordTimer').innerText = 'کلیک برای ضبط مجدد';
+      }
+    }
+
+    async function handleAudioUpload(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+      initAudioCtx();
+      document.getElementById('audioTrackName').innerText = file.name;
+      const ab = await file.arrayBuffer();
+      audioBuffer = await audioCtx.decodeAudioData(ab);
+      loadBufferIntoAudioEditor(file.name);
+    }
+
+    function loadBufferIntoAudioEditor(title) {
+      startTime = 0;
+      endTime = audioBuffer.duration;
+      const sSlider = document.getElementById('startSlider');
+      const eSlider = document.getElementById('endSlider');
+      sSlider.max = audioBuffer.duration;
+      sSlider.value = 0;
+      eSlider.max = audioBuffer.duration;
+      eSlider.value = audioBuffer.duration;
+
+      document.getElementById('audioDurationLabel').innerText = 'مدت کل: ' + formatSec(audioBuffer.duration);
+      updateAudioTimeLabels();
+      drawWaveform();
+      document.getElementById('audioEditorPanel').classList.remove('hidden');
+    }
+
+    function formatSec(s) {
       const m = Math.floor(s / 60);
       const sec = Math.floor(s % 60);
       const ms = Math.floor((s % 1) * 10);
       return `${String(m).padStart(2, '0')}:${String(sec).padStart(2, '0')}.${ms}`;
     }
 
-    function updateTimeLabels() {
-      document.getElementById('startTimeLabel').innerText = formatTime(startTime);
-      document.getElementById('endTimeLabel').innerText = formatTime(endTime);
+    function updateAudioTimeLabels() {
+      document.getElementById('startTimeLabel').innerText = formatSec(startTime);
+      document.getElementById('endTimeLabel').innerText = formatSec(endTime);
     }
 
-    function updateTrims() {
-      const startSlider = document.getElementById('startSlider');
-      const endSlider = document.getElementById('endSlider');
-      let s = parseFloat(startSlider.value);
-      let e = parseFloat(endSlider.value);
-
+    function updateAudioTrims() {
+      let s = parseFloat(document.getElementById('startSlider').value);
+      let e = parseFloat(document.getElementById('endSlider').value);
       if (s >= e) {
         s = Math.max(0, e - 0.2);
-        startSlider.value = s;
+        document.getElementById('startSlider').value = s;
       }
       startTime = s;
       endTime = e;
-      updateTimeLabels();
-      drawWaveform();
-
-      if (isPlaying) stopPreview();
-    }
-
-    function drawWaveform() {
-      const canvas = document.getElementById('waveformCanvas');
-      const dpr = window.devicePixelRatio || 1;
-      canvas.width = canvas.parentElement.clientWidth * dpr;
-      canvas.height = canvas.parentElement.clientHeight * dpr;
-      const ctx = canvas.getContext('2d');
-      ctx.scale(dpr, dpr);
-
-      const w = canvas.parentElement.clientWidth;
-      const h = canvas.parentElement.clientHeight;
-      ctx.clearRect(0, 0, w, h);
-
-      if (!audioBuffer) return;
-      const data = audioBuffer.getChannelData(0);
-      const step = Math.ceil(data.length / w);
-      const amp = h / 2;
-
-      ctx.fillStyle = '#334155';
-      for (let i = 0; i < w; i++) {
-        let min = 1.0, max = -1.0;
-        for (let j = 0; j < step; j++) {
-          const val = data[(i * step) + j];
-          if (val < min) min = val;
-          if (val > max) max = val;
-        }
-        ctx.fillRect(i, (1 + min) * amp, 1, Math.max(1, (max - min) * amp));
-      }
-
-      const startX = (startTime / audioBuffer.duration) * w;
-      const endX = (endTime / audioBuffer.duration) * w;
-      ctx.fillStyle = 'rgba(99, 102, 241, 0.35)';
-      ctx.fillRect(startX, 0, Math.max(2, endX - startX), h);
-
-      ctx.fillStyle = '#818cf8';
-      ctx.fillRect(startX, 0, 2, h);
-      ctx.fillRect(endX - 1, 0, 2, h);
-    }
-
-    function togglePreview() { isPlaying ? stopPreview() : startPreview(); }
-
-    function startPreview() {
-      if (!audioBuffer) return;
-      initCtx();
-      stopPreview();
-
-      const speed = parseFloat(document.getElementById('speedSlider').value);
-      const vol = parseFloat(document.getElementById('volumeSlider').value) / 100;
-
-      currentSource = audioCtx.createBufferSource();
-      currentSource.buffer = audioBuffer;
-      currentSource.playbackRate.value = speed;
-
-      const gain = audioCtx.createGain();
-      gain.gain.value = vol;
-
-      currentSource.connect(gain);
-      gain.connect(audioCtx.destination);
-
-      currentSource.start(0, startTime, endTime - startTime);
-      isPlaying = true;
-      document.getElementById('playIcon').className = 'fa-solid fa-square';
-      document.getElementById('previewBtn').innerHTML = '<i class="fa-solid fa-square"></i> توقف پخش';
-
-      currentSource.onended = () => stopPreview();
-    }
-
-    function stopPreview() {
-      if (currentSource) {
-        try { currentSource.stop(); } catch(e){}
-        currentSource.disconnect();
-        currentSource = null;
-      }
-      isPlaying = false;
-      document.getElementById('playIcon').className = 'fa-solid fa-play';
-      document.getElementById('previewBtn').innerHTML = '<i class="fa-solid fa-play"></i> پخش بازه انتخاب‌شده (تست برش)';
-    }
-
-    async function exportAudio(format) {
-      if (!audioBuffer) return;
-      initCtx();
-      stopPreview();
-
-      const speed = parseFloat(document.getElementById('speedSlider').value);
-      const vol = parseFloat(document.getElementById('volumeSlider').value) / 100;
-      const cutDuration = (endTime - startTime) / speed;
-
-      const offlineCtx = new OfflineAudioContext(
-        audioBuffer.numberOfChannels,
-        Math.ceil(audioBuffer.sampleRate * cutDuration),
-        audioBuffer.sampleRate
-      );
-
-      const src = offlineCtx.createBufferSource();
-      src.buffer = audioBuffer;
-      src.playbackRate.value = speed;
-
-      const gain = offlineCtx.createGain();
-      gain.gain.value = vol;
-
-      src.connect(gain);
-      gain.connect(offlineCtx.destination);
-
-      src.start(0, startTime, endTime - startTime);
-      const rendered = await offlineCtx.startRendering();
-
-      const wavBlob = bufferToWav(rendered);
-      const a = document.createElement('a');
-      a.href = URL.createObjectURL(wavBlob);
-      a.download = format === 'ogg' ? 'voice-oajor.ogg' : 'audio-cut-oajor.wav';
-      a.click();
-    }
-
-    function bufferToWav(b) {
-      let n = b.numberOfChannels, len = b.length * n * 2 + 44, dv = new DataView(new ArrayBuffer(len)), p = 0;
-      function w16(d) { dv.setUint16(p, d, true); p += 2; }
-      function w32(d) { dv.setUint32(p, d, true); p += 4; }
-      w32(0x46464952); w32(len - 8); w32(0x45564157); w32(0x20746d66);
-      w32(16); w16(1); w16(n); w32(b.sampleRate); w32(b.sampleRate * 2 * n);
-      w16(n * 2); w16(16); w32(0x61746164); w32(len - p - 4);
-      for (let i = 0; i < n; i++) {
-        let ch = b.getChannelData(i);
-        let o = 0;
-        while (o < b.length) {
-          let s = Math.max(-1, Math.min(1, ch[o]));
-          s = (s < 0 ? s * 32768 : s * 32767) | 0;
-          dv.setInt16(p, s, true); p += 2;
-          o++;
-        }
-      }
-      return new Blob([dv.buffer], { type: 'audio/wav' });
-    }
-  </script>
-</body>
-</html>
+   
