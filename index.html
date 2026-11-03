@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>استودیو برش و تبدیل ویس | اثر @oajor</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet">
+  <style>
+    body { font-family: 'Vazirmatn', sans-serif; }
+    input[type=range] { accent-color: #6366f1; }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col justify-between items-center p-3 sm:p-5">
+
+  <!-- Header -->
+  <header class="w-full max-w-2xl flex flex-col sm:flex-row items-center justify-between py-4 border-b border-slate-800 gap-3">
+    <div class="flex items-center gap-3">
+      <div class="w-11 h-11 rounded-2xl bg-indigo-600 flex items-center justify-center text-xl shadow-lg shadow-indigo-500/30">
+        <i class="fa-solid fa-scissors text-white"></i>
+      </div>
+      <div>
+        <h1 class="text-lg sm:text-xl font-bold bg-gradient-to-r from-indigo-400 via-purple-300 to-pink-400 bg-clip-text text-transparent">برش و تبدیل حرفه‌ای صدا</h1>
+        <p class="text-xs text-slate-400">کات سریع، تقویت ولوم و خروجی بدون افت کیفیت</p>
+      </div>
+    </div>
+
+    <!-- Creator Tag -->
+    <a href="https://t.me/oajor" target="_blank" class="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-indigo-950/80 border border-indigo-500/40 text-indigo-300 hover:bg-indigo-900 transition-all text-xs shadow-md">
+      <i class="fa-brands fa-telegram text-base text-sky-400"></i>
+      <span>طراحی و توسعه: <strong>oajor@</strong></span>
+    </a>
+  </header>
+
+  <!-- Main Box -->
+  <main class="w-full max-w-2xl my-5 flex flex-col gap-4">
+
+    <!-- Guide Box (راهنمای استفاده ساده) -->
+    <div class="bg-slate-900/60 border border-slate-800/80 p-3.5 rounded-2xl flex flex-col gap-2">
+      <div class="flex items-center gap-2 text-indigo-400 text-xs font-bold">
+        <i class="fa-solid fa-circle-info"></i>
+        <span>راهنمای ۳ مرحله‌ای استفاده:</span>
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 text-[11px] text-slate-300">
+        <div class="bg-slate-950/60 p-2.5 rounded-xl border border-slate-800/50 flex items-start gap-2">
+          <span class="w-5 h-5 rounded-full bg-indigo-600/30 text-indigo-400 flex items-center justify-center font-bold text-[10px] shrink-0">۱</span>
+          <span>فایل آهنگ، ویس یا صدای دلخواهتان را بارگذاری کنید.</span>
+        </div>
+        <div class="bg-slate-950/60 p-2.5 rounded-xl border border-slate-800/50 flex items-start gap-2">
+          <span class="w-5 h-5 rounded-full bg-indigo-600/30 text-indigo-400 flex items-center justify-center font-bold text-[10px] shrink-0">۲</span>
+          <span>با اسلایدرها ثانیه شروع و پایان را انتخاب کرده و ولوم را تنظیم کنید.</span>
+        </div>
+        <div class="bg-slate-950/60 p-2.5 rounded-xl border border-slate-800/50 flex items-start gap-2">
+          <span class="w-5 h-5 rounded-full bg-indigo-600/30 text-indigo-400 flex items-center justify-center font-bold text-[10px] shrink-0">۳</span>
+          <span>روی خروجی <strong>WAV</strong> یا <strong>ویس تلگرام</strong> کلیک و ذخیره کنید.</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Upload Box -->
+    <label class="bg-slate-900/90 border-2 border-dashed border-slate-800 hover:border-indigo-500/60 p-6 rounded-2xl flex flex-col items-center justify-center text-center gap-3 cursor-pointer transition-all">
+      <div class="w-14 h-14 rounded-full bg-indigo-600/20 flex items-center justify-center">
+        <i class="fa-solid fa-file-audio text-indigo-400 text-2xl"></i>
+      </div>
+      <div>
+        <div class="font-semibold text-sm text-indigo-300">انتخاب یا رها کردن فایل صوتی</div>
+        <p class="text-xs text-slate-500 mt-1">پشتیبانی از انواع فرمت‌های MP3, WAV, OGG, M4A</p>
+      </div>
+      <span id="audioTrackName" class="text-xs text-indigo-400 font-mono font-medium truncate max-w-[280px]">هنوز فایلی انتخاب نشده</span>
+      <input type="file" id="audioFileInput" accept="audio/*" class="hidden" onchange="handleFileUpload(event)">
+    </label>
+
+    <!-- Waveform & Trimmer Container -->
+    <div id="editorPanel" class="hidden bg-slate-900/90 border border-slate-800 p-4 rounded-2xl flex flex-col gap-4">
+      
+      <!-- Waveform Canvas -->
+      <div class="relative w-full h-24 bg-slate-950 rounded-xl overflow-hidden border border-slate-800/80">
+        <canvas id="waveformCanvas" class="w-full h-full block"></canvas>
+      </div>
+
+      <!-- Trim Controls (Start & End) -->
+      <div class="grid grid-cols-2 gap-3 bg-slate-950/60 p-3 rounded-xl border border-slate-800/60">
+        <div>
+          <div class="flex justify-between text-xs text-slate-400 mb-1">
+            <span>نقطه شروع برش:</span>
+            <span id="startTimeLabel" class="font-mono text-indigo-400 font-bold">00:00.0</span>
+          </div>
+          <input type="range" id="startSlider" min="0" max="100" step="0.1" value="0" class="w-full" oninput="updateTrims()">
+        </div>
+        <div>
+          <div class="flex justify-between text-xs text-slate-400 mb-1">
+            <span>نقطه پایان برش:</span>
+            <span id="endTimeLabel" class="font-mono text-indigo-400 font-bold">00:00.0</span>
+          </div>
+          <input type="range" id="endSlider" min="0" max="100" step="0.1" value="100" class="w-full" oninput="updateTrims()">
+        </div>
+      </div>
+
+      <!-- Settings: Volume & Speed -->
+      <div class="grid grid-cols-2 gap-3">
+        <div class="bg-slate-950/40 p-3 rounded-xl border border-slate-800/40">
+          <div class="flex justify-between text-xs text-slate-400 mb-1">
+            <span>تقویت بلندی صدا (Volume):</span>
+            <span id="volLabel" class="font-mono text-emerald-400 font-bold">100%</span>
+          </div>
+          <input type="range" id="volumeSlider" min="50" max="250" step="5" value="100" class="w-full" oninput="document.getElementById('volLabel').innerText = this.value + '%'">
+        </div>
+        <div class="bg-slate-950/40 p-3 rounded-xl border border-slate-800/40">
+          <div class="flex justify-between text-xs text-slate-400 mb-1">
+            <span>سرعت صدا (Speed):</span>
+            <span id="speedLabel" class="font-mono text-amber-400 font-bold">1.0x</span>
+          </div>
+          <input type="range" id="speedSlider" min="0.5" max="2.0" step="0.05" value="1.0" class="w-full" oninput="document.getElementById('speedLabel').innerText = parseFloat(this.value).toFixed(2) + 'x'">
+        </div>
+      </div>
+
+      <!-- Play / Stop Preview -->
+      <button id="previewBtn" onclick="togglePreview()" class="w-full py-3 px-4 rounded-xl bg-indigo-600 hover:bg-indigo-500 font-medium text-xs sm:text-sm flex items-center justify-center gap-2 transition-all shadow-lg shadow-indigo-600/30">
+        <i id="playIcon" class="fa-solid fa-play"></i> پخش بازه انتخاب‌شده (تست برش)
+      </button>
+
+      <!-- Download Options -->
+      <div class="grid grid-cols-2 gap-3 pt-2 border-t border-slate-800">
+        <button onclick="exportAudio('wav')" class="py-3 px-3 rounded-xl bg-sky-600 hover:bg-sky-500 font-medium text-xs flex items-center justify-center gap-2 transition-all shadow-lg shadow-sky-600/30">
+          <i class="fa-solid fa-file-waveform"></i> دانلود کیفیت اصلی (WAV)
+        </button>
+        <button onclick="exportAudio('ogg')" class="py-3 px-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 font-medium text-xs flex items-center justify-center gap-2 transition-all shadow-lg shadow-emerald-600/30">
+          <i class="fa-solid fa-microphone-lines"></i> دانلود ویس تلگرام (.OGG)
+        </button>
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="w-full max-w-2xl text-center py-4 border-t border-slate-800/80 text-xs text-slate-500">
+    طراحی شده با افتخار توسط <a href="https://t.me/oajor" target="_blank" class="text-indigo-400 font-semibold hover:underline">oajor@</a> برای اعضای محترم کانال
+  </footer>
+
+  <script>
+    let audioCtx = null, audioBuffer = null, currentSource = null, isPlaying = false;
+    let startTime = 0, endTime = 0;
+
+    function initCtx() {
+      if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+    }
+
+    async function handleFileUpload(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+      initCtx();
+      document.getElementById('audioTrackName').innerText = file.name;
+      const arrayBuffer = await file.arrayBuffer();
+      audioBuffer = await audioCtx.decodeAudioData(arrayBuffer);
+
+      startTime = 0;
+      endTime = audioBuffer.duration;
+
+      const startSlider = document.getElementById('startSlider');
+      const endSlider = document.getElementById('endSlider');
+      startSlider.max = audioBuffer.duration;
+      startSlider.value = 0;
+      endSlider.max = audioBuffer.duration;
+      endSlider.value = audioBuffer.duration;
+
+      updateTimeLabels();
+      drawWaveform();
+      document.getElementById('editorPanel').classList.remove('hidden');
+    }
+
+    function formatTime(s) {
+      const m = Math.floor(s / 60);
+      const sec = Math.floor(s % 60);
+      const ms = Math.floor((s % 1) * 10);
+      return `${String(m).padStart(2, '0')}:${String(sec).padStart(2, '0')}.${ms}`;
+    }
+
+    function updateTimeLabels() {
+      document.getElementById('startTimeLabel').innerText = formatTime(startTime);
+      document.getElementById('endTimeLabel').innerText = formatTime(endTime);
+    }
+
+    function updateTrims() {
+      const startSlider = document.getElementById('startSlider');
+      const endSlider = document.getElementById('endSlider');
+      let s = parseFloat(startSlider.value);
+      let e = parseFloat(endSlider.value);
+
+      if (s >= e) {
+        s = Math.max(0, e - 0.2);
+        startSlider.value = s;
+      }
+      startTime = s;
+      endTime = e;
+      updateTimeLabels();
+      drawWaveform();
+
+      if (isPlaying) stopPreview();
+    }
+
+    function drawWaveform() {
+      const canvas = document.getElementById('waveformCanvas');
+      const dpr = window.devicePixelRatio || 1;
+      canvas.width = canvas.parentElement.clientWidth * dpr;
+      canvas.height = canvas.parentElement.clientHeight * dpr;
+      const ctx = canvas.getContext('2d');
+      ctx.scale(dpr, dpr);
+
+      const w = canvas.parentElement.clientWidth;
+      const h = canvas.parentElement.clientHeight;
+      ctx.clearRect(0, 0, w, h);
+
+      if (!audioBuffer) return;
+      const data = audioBuffer.getChannelData(0);
+      const step = Math.ceil(data.length / w);
+      const amp = h / 2;
+
+      ctx.fillStyle = '#334155';
+      for (let i = 0; i < w; i++) {
+        let min = 1.0, max = -1.0;
+        for (let j = 0; j < step; j++) {
+          const val = data[(i * step) + j];
+          if (val < min) min = val;
+          if (val > max) max = val;
+        }
+        ctx.fillRect(i, (1 + min) * amp, 1, Math.max(1, (max - min) * amp));
+      }
+
+      const startX = (startTime / audioBuffer.duration) * w;
+      const endX = (endTime / audioBuffer.duration) * w;
+      ctx.fillStyle = 'rgba(99, 102, 241, 0.35)';
+      ctx.fillRect(startX, 0, Math.max(2, endX - startX), h);
+
+      ctx.fillStyle = '#818cf8';
+      ctx.fillRect(startX, 0, 2, h);
+      ctx.fillRect(endX - 1, 0, 2, h);
+    }
+
+    function togglePreview() { isPlaying ? stopPreview() : startPreview(); }
+
+    function startPreview() {
+      if (!audioBuffer) return;
+      initCtx();
+      stopPreview();
+
+      const speed = parseFloat(document.getElementById('speedSlider').value);
+      const vol = parseFloat(document.getElementById('volumeSlider').value) / 100;
+
+      currentSource = audioCtx.createBufferSource();
+      currentSource.buffer = audioBuffer;
+      currentSource.playbackRate.value = speed;
+
+      const gain = audioCtx.createGain();
+      gain.gain.value = vol;
+
+      currentSource.connect(gain);
+      gain.connect(audioCtx.destination);
+
+      currentSource.start(0, startTime, endTime - startTime);
+      isPlaying = true;
+      document.getElementById('playIcon').className = 'fa-solid fa-square';
+      document.getElementById('previewBtn').innerHTML = '<i class="fa-solid fa-square"></i> توقف پخش';
+
+      currentSource.onended = () => stopPreview();
+    }
+
+    function stopPreview() {
+      if (currentSource) {
+        try { currentSource.stop(); } catch(e){}
+        currentSource.disconnect();
+        currentSource = null;
+      }
+      isPlaying = false;
+      document.getElementById('playIcon').className = 'fa-solid fa-play';
+      document.getElementById('previewBtn').innerHTML = '<i class="fa-solid fa-play"></i> پخش بازه انتخاب‌شده (تست برش)';
+    }
+
+    async function exportAudio(format) {
+      if (!audioBuffer) return;
+      initCtx();
+      stopPreview();
+
+      const speed = parseFloat(document.getElementById('speedSlider').value);
+      const vol = parseFloat(document.getElementById('volumeSlider').value) / 100;
+      const cutDuration = (endTime - startTime) / speed;
+
+      const offlineCtx = new OfflineAudioContext(
+        audioBuffer.numberOfChannels,
+        Math.ceil(audioBuffer.sampleRate * cutDuration),
+        audioBuffer.sampleRate
+      );
+
+      const src = offlineCtx.createBufferSource();
+      src.buffer = audioBuffer;
+      src.playbackRate.value = speed;
+
+      const gain = offlineCtx.createGain();
+      gain.gain.value = vol;
+
+      src.connect(gain);
+      gain.connect(offlineCtx.destination);
+
+      src.start(0, startTime, endTime - startTime);
+      const rendered = await offlineCtx.startRendering();
+
+      const wavBlob = bufferToWav(rendered);
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(wavBlob);
+      a.download = format === 'ogg' ? 'voice-oajor.ogg' : 'audio-cut-oajor.wav';
+      a.click();
+    }
+
+    function bufferToWav(b) {
+      let n = b.numberOfChannels, len = b.length * n * 2 + 44, dv = new DataView(new ArrayBuffer(len)), p = 0;
+      function w16(d) { dv.setUint16(p, d, true); p += 2; }
+      function w32(d) { dv.setUint32(p, d, true); p += 4; }
+      w32(0x46464952); w32(len - 8); w32(0x45564157); w32(0x20746d66);
+      w32(16); w16(1); w16(n); w32(b.sampleRate); w32(b.sampleRate * 2 * n);
+      w16(n * 2); w16(16); w32(0x61746164); w32(len - p - 4);
+      for (let i = 0; i < n; i++) {
+        let ch = b.getChannelData(i);
+        let o = 0;
+        while (o < b.length) {
+          let s = Math.max(-1, Math.min(1, ch[o]));
+          s = (s < 0 ? s * 32768 : s * 32767) | 0;
+          dv.setInt16(p, s, true); p += 2;
+          o++;
+        }
+      }
+      return new Blob([dv.buffer], { type: 'audio/wav' });
+    }
+  </script>
+</body>
+</html>
