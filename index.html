@@ -1,423 +1,345 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="fa" dir="rtl">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>سوپر استودیو تلگرام | @oajor</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet">
-  <style>
-    body { font-family: 'Vazirmatn', sans-serif; background-color: #0f172a; color: #f1f5f9; }
-    input[type=range] { accent-color: #6366f1; }
-    .pulse-rec { animation: pulse 1.5s infinite; }
-    @keyframes pulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.8; transform: scale(1.04); } }
-    
-    /* افکت لودینگ قلب */
-    #heart-overlay {
-      position: fixed; inset: 0; background: #0f172a; z-index: 9999;
-      display: flex; flex-direction: column; align-items: center; justify-content: center;
-      transition: opacity 0.6s ease;
-    }
-    .beating-heart { color: #e11d48; font-size: 3rem; animation: heartbeat 1.2s infinite; }
-    @keyframes heartbeat { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.3); } }
-  </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#080d1b">
+<title>OAJOR Studio | استودیوی صدا</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://cdn.jsdelivr.net">
+<link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+<style>
+:root{color-scheme:dark;--bg:#080d1b;--panel:#101a2e;--line:#25334d;--muted:#91a0b9;--text:#f3f6fc;--primary:#7568f6;--cyan:#38bdf8;--green:#22c58b;--red:#fb5577;--radius:20px}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;min-height:100vh;background:radial-gradient(ellipse at 15% 0%,#1c2450 0,transparent 34%),radial-gradient(ellipse at 95% 20%,#12344a 0,transparent 28%),var(--bg);color:var(--text);font-family:Vazirmatn,system-ui,sans-serif}
+button,input{font:inherit}button{cursor:pointer}button:disabled{opacity:.5;cursor:not-allowed}a{color:inherit;text-decoration:none}
+.app{width:min(100% - 28px,900px);margin:auto;padding:24px 0 40px}
+header{display:flex;align-items:center;justify-content:space-between;gap:18px;padding:12px 2px 22px;border-bottom:1px solid #ffffff12}
+.brand{display:flex;align-items:center;gap:13px}.logo{width:48px;height:48px;border-radius:16px;background:linear-gradient(140deg,#8274ff,#4e43c8);display:grid;place-items:center;font-size:21px;box-shadow:0 12px 35px #7568f644}
+.brand h1{font-size:18px;margin:0 0 3px}.brand p{font-size:11px;color:var(--muted);margin:0}
+.creator{font-size:12px;color:#a5caff;background:#162846;border:1px solid #31517c;padding:9px 13px;border-radius:30px}
+.hero{padding:24px 2px 18px}.eyebrow{font-size:11px;color:#a9a1ff;letter-spacing:.3px}
+.hero h2{font-size:clamp(23px,4vw,34px);line-height:1.5;margin:5px 0 7px}
+.hero p{font-size:13px;color:var(--muted);margin:0;line-height:2}
+.panel{background:linear-gradient(145deg,#121e34f2,#0d1729f5);border:1px solid var(--line);border-radius:var(--radius);padding:18px;box-shadow:0 15px 40px #0002;margin-bottom:15px}
+.panel-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:15px}
+.panel-head h3{margin:0;font-size:15px}.sub{font-size:11px;color:var(--muted)}
+.tools-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.action-card{border:1px solid var(--line);background:#0b1527;border-radius:17px;padding:19px 13px;display:flex;flex-direction:column;align-items:center;gap:9px;text-align:center;color:var(--text);min-height:140px;transition:.2s}
+.action-card:hover{border-color:#8177ff;transform:translateY(-2px)}
+.action-icon{width:52px;height:52px;border-radius:17px;display:grid;place-items:center;font-size:20px;background:#6c5ce71f;color:#a59cff}
+.action-card strong{font-size:13px}.action-card small{font-size:10px;color:var(--muted);line-height:1.8}
+.file-input{display:none}.file-label{cursor:pointer}
+.editor{display:none;margin-top:14px}.editor.show{display:block}
+.wave-wrap{height:140px;border:1px solid var(--line);border-radius:14px;background:#07101f;overflow:hidden;position:relative}
+.wave-wrap #waveform{width:100%;height:100%}
+.controls{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:13px 0}
+.control{padding:12px;border:1px solid #263653;border-radius:14px;background:#0a1425}
+.control label{display:flex;justify-content:space-between;gap:8px;font-size:11px;color:var(--muted);margin-bottom:9px}
+.control output{color:#b8b1ff;font-weight:700}input[type=range]{width:100%;accent-color:#8175ff;cursor:pointer}
+.btn-row{display:flex;gap:9px;flex-wrap:wrap;margin-top:12px}
+.btn{border:1px solid transparent;border-radius:13px;padding:12px 15px;color:white;font-size:12px;font-weight:700;background:#293954;flex:1;min-width:120px;transition:.15s}
+.btn:active{transform:scale(.97)}
+.btn.primary{background:linear-gradient(120deg,#766af5,#554acb)}.btn.success{background:linear-gradient(120deg,#0da979,#087f70)}.btn.info{background:linear-gradient(120deg,#168cc7,#2563b7)}.btn.ghost{background:#14213a;border-color:#30415f}.btn.danger{background:#9f2449}
+.status{min-height:22px;font-size:11px;color:#aab8cf;line-height:1.9;margin:12px 2px 0}
+.status.error{color:#ff8da4}.status.good{color:#5ce0b2}
+.meter{height:6px;background:#26334a;border-radius:20px;overflow:hidden;margin-top:10px;display:none}
+.meter.show{display:block}.meter>i{height:100%;width:0;display:block;background:linear-gradient(90deg,#6d61ee,#35c7b0);transition:width .15s}
+.note{font-size:10px;line-height:2;color:#94a5bf;background:#0b1527;border:1px solid #243550;padding:11px 13px;border-radius:13px;margin-top:12px}
+.badge{font-size:10px;padding:5px 9px;border-radius:20px;background:#1a2943;color:#b7c5dd}
+.badge.live{background:#4a1930;color:#ff9ab0}
+.hide{display:none!important}
+footer{text-align:center;color:#71819b;font-size:11px;padding:24px 0 0;margin-top:24px;border-top:1px solid #ffffff12}
+#toast{position:fixed;bottom:18px;left:50%;transform:translate(-50%,20px);background:#172640;border:1px solid #3b5275;color:white;padding:12px 18px;border-radius:13px;font-size:12px;opacity:0;pointer-events:none;transition:.25s;z-index:20;max-width:calc(100% - 28px);text-align:center}
+#toast.show{opacity:1;transform:translate(-50%,0)}
+@media(min-width:760px){.hero{padding-top:32px}.panel{padding:21px}}
+@media(max-width:480px){.app{width:min(100% - 20px,900px);padding-top:12px}.creator{font-size:10px;padding:8px}.brand h1{font-size:15px}.brand p{font-size:10px}.panel{padding:14px}.action-card{min-height:128px;padding:14px 8px}.btn{min-width:100px;padding:11px 8px}.controls{gap:7px}}
+</style>
 </head>
-<body class="min-h-screen flex flex-col items-center p-3 sm:p-5">
+<body>
+<div class="app">
+<header>
+ <div class="brand"><div class="logo"><i class="fa-solid fa-wand-magic-sparkles"></i></div><div><h1>OAJOR Studio</h1><p>استودیوی صدای تلگرام</p></div></div>
+ <a class="creator" href="https://t.me/oajor" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-telegram"></i> @oajor</a>
+</header>
+<section class="hero"><div class="eyebrow">AUDIO ENGINE · نسخه حرفه‌ای</div><h2>صدات رو حرفه‌ای برش بزن</h2><p>موج صدا رو با موس یا انگشت بکش، بازه رو انتخاب کن و با کیفیت MP3 یا WAV دانلود کن.</p></section>
 
-  <!-- لودینگ قلب -->
-  <div id="heart-overlay">
-    <i class="fa-solid fa-heart beating-heart"></i>
-    <p class="mt-4 text-sm text-slate-400 font-bold">با عشق برای شما...</p>
-  </div>
+<div class="panel">
+ <div class="panel-head"><h3><i class="fa-solid fa-microphone-lines"></i> ورودی صدا</h3><span class="badge" id="audioState">آماده</span></div>
+ <div class="tools-grid">
+  <button class="action-card" id="recordAudio" type="button"><span class="action-icon" id="recordAudioIcon"><i class="fa-solid fa-microphone"></i></span><strong id="recordAudioTitle">ضبط صدا</strong><small id="recordAudioHint">برای شروع ضبط لمس کنید</small></button>
+  <label class="action-card file-label"><span class="action-icon"><i class="fa-solid fa-folder-open"></i></span><strong>انتخاب فایل صوتی</strong><small id="audioFilename">MP3، WAV، OGG، M4A</small><input id="audioFile" class="file-input" type="file" accept="audio/*"></label>
+ </div>
+ <div class="status" id="audioStatus" aria-live="polite">برای شروع، صدا ضبط کنید یا یک فایل انتخاب کنید.</div>
+ <div class="meter" id="audioMeter"><i></i></div>
+</div>
 
-  <header class="w-full max-w-2xl flex flex-col sm:flex-row items-center justify-between py-4 border-b border-slate-800 gap-3">
-    <div class="flex items-center gap-3">
-      <div class="w-11 h-11 rounded-2xl bg-indigo-600 flex items-center justify-center text-xl shadow-lg shadow-indigo-500/30">
-        <i class="fa-solid fa-wand-magic-sparkles text-white"></i>
-      </div>
-      <div>
-        <h1 class="text-lg sm:text-xl font-bold bg-gradient-to-r from-indigo-400 via-purple-300 to-pink-400 bg-clip-text text-transparent">سوپر استودیو تلگرام</h1>
-        <p class="text-xs text-slate-400">برش ویس، تقویت صدا و ساخت ویدیو گرد تلگرامی</p>
-      </div>
-    </div>
-    <a href="https://t.me/oajor" target="_blank" class="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-indigo-950/80 border border-indigo-500/40 text-indigo-300 hover:bg-indigo-900 transition-all text-xs shadow-md">
-      <i class="fa-brands fa-telegram text-base text-sky-400"></i>
-      <span>طراحی و توسعه: <strong>oajor@</strong></span>
-    </a>
-  </header>
+<div class="panel" id="editorPanel" style="display:none">
+ <div class="panel-head"><h3><i class="fa-solid fa-sliders"></i> ویرایش و خروجی</h3><span class="badge" id="audioDuration">بدون فایل</span></div>
+ <div class="wave-wrap"><div id="waveform"></div></div>
+ <div class="note" style="margin-top:8px"><i class="fa-solid fa-hand-pointer"></i> روی موج صدا کلیک کنید و بکشید تا بازه مورد نظر انتخاب شود.</div>
+ <div class="controls">
+  <div class="control"><label for="audioVolume">بلندی صدا <output id="audioVolumeOut">100%</output></label><input id="audioVolume" type="range" min="0" max="200" step="5" value="100"></div>
+  <div class="control"><label for="audioSpeed">سرعت پخش <output id="audioSpeedOut">1.00×</output></label><input id="audioSpeed" type="range" min=".5" max="2" step=".05" value="1"></div>
+ </div>
+ <div class="btn-row"><button class="btn primary" id="previewBtn" type="button"><i class="fa-solid fa-play"></i> پخش بازه انتخابی</button><button class="btn ghost" id="stopBtn" type="button"><i class="fa-solid fa-stop"></i> توقف</button></div>
+ <div class="btn-row"><button class="btn info" id="exportWav" type="button"><i class="fa-solid fa-file-audio"></i> دانلود WAV (کیفیت کامل)</button><button class="btn success" id="exportMp3" type="button"><i class="fa-solid fa-file-arrow-down"></i> دانلود MP3 (تلگرام)</button></div>
+ <div class="note">خروجی MP3 با انکودر lamejs ساخته می‌شود و مستقیماً در تلگرام قابل ارسال به‌عنوان فایل صوتی است. WAV برای ویرایش بیشتر یا کیفیت بدون افت مناسب است.</div>
+</div>
 
-  <div class="w-full max-w-2xl grid grid-cols-2 gap-2 mt-4 p-1 bg-slate-900/90 border border-slate-800 rounded-2xl">
-    <button id="tabAudioBtn" onclick="switchTab('audio')" class="py-2.5 rounded-xl font-bold text-xs sm:text-sm flex items-center justify-center gap-2 bg-indigo-600 text-white shadow-md transition-all">
-      <i class="fa-solid fa-microphone-lines"></i> ادیت و ضبط ویس
-    </button>
-    <button id="tabVideoBtn" onclick="switchTab('video')" class="py-2.5 rounded-xl font-bold text-xs sm:text-sm flex items-center justify-center gap-2 text-slate-400 hover:text-white transition-all">
-      <i class="fa-solid fa-circle-play"></i> ویدیو گرد تلگرام (Note)
-    </button>
-  </div>
+<footer>OAJOR Studio · ساخته‌شده برای تولید محتوای بهتر <br><a href="https://t.me/oajor" target="_blank" rel="noopener noreferrer" style="color:#a99fff">@oajor</a></footer>
+</div>
+<div id="toast" role="status" aria-live="polite"></div>
 
-  <main class="w-full max-w-2xl my-4 flex flex-col gap-4">
+<script src="https://unpkg.com/wavesurfer.js@7"></script>
+<script src="https://unpkg.com/wavesurfer.js@7/dist/plugins/regions.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/lamejs@1.2.1/lame.min.js"></script>
+<script>
+(()=>{'use strict';
+const $=id=>document.getElementById(id);
+let toastTimer;
+function toast(s){const t=$('toast');t.textContent=s;t.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.classList.remove('show'),3000)}
+function status(id,s,kind=''){const el=$(id);el.textContent=s;el.className='status '+kind}
+function fmt(v){v=Math.max(0,Number(v)||0);return `${String(Math.floor(v/60)).padStart(2,'0')}:${String(Math.floor(v%60)).padStart(2,'0')}.${Math.floor(v%1*10)}`}
+function download(blob,name){const u=URL.createObjectURL(blob),a=document.createElement('a');a.href=u;a.download=name;document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),60000)}
+function setMeter(id,p){const el=$(id);el.classList.add('show');el.firstElementChild.style.width=Math.max(0,Math.min(100,p))+'%'}
+function clearMeter(id){$(id).classList.remove('show');$(id).firstElementChild.style.width='0%'}
 
-    <!-- بخش ویس -->
-    <div id="audioSection" class="flex flex-col gap-4">
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-        <div onclick="toggleAudioRecording()" class="cursor-pointer bg-slate-900/90 border border-slate-800 p-5 rounded-2xl flex flex-col items-center justify-center text-center gap-3 hover:border-rose-500/50 transition-all">
-          <div id="recordBtn" class="w-16 h-16 rounded-full bg-rose-600 flex items-center justify-center text-2xl text-white shadow-lg shadow-rose-600/40">
-            <i id="recordIcon" class="fa-solid fa-microphone"></i>
-          </div>
-          <div>
-            <div id="recordStatus" class="font-bold text-sm text-rose-400">شروع ضبط ویس</div>
-            <p id="recordTimer" class="text-xs text-slate-400 mt-0.5">روی این کادر ضربه بزنید</p>
-          </div>
-        </div>
+// ===== Wavesurfer Setup =====
+let wavesurfer=null, regionsPlugin=null, currentRegion=null;
+let audioCtx=null, audioBuffer=null, isPlaying=false;
 
-        <label class="cursor-pointer bg-slate-900/90 border border-dashed border-slate-800 hover:border-indigo-500/60 p-5 rounded-2xl flex flex-col items-center justify-center text-center gap-2 transition-all">
-          <div class="w-12 h-12 rounded-full bg-indigo-600/20 flex items-center justify-center">
-            <i class="fa-solid fa-cloud-arrow-up text-indigo-400 text-xl"></i>
-          </div>
-          <div>
-            <div class="font-semibold text-xs sm:text-sm text-indigo-300">انتخاب فایل از گوشی</div>
-            <p class="text-[11px] text-slate-500 mt-0.5">MP3, WAV, OGG, M4A یا ویس</p>
-          </div>
-          <span id="audioTrackName" class="text-[11px] text-indigo-400 truncate max-w-[200px]">فایلی انتخاب نشده</span>
-          <input type="file" id="audioFileInput" accept="audio/*" class="hidden" onchange="handleAudioUpload(event)">
-        </label>
-      </div>
-
-      <div id="audioEditorPanel" class="hidden bg-slate-900/90 border border-slate-800 p-4 rounded-2xl flex flex-col gap-4">
-        <div class="flex justify-between text-xs text-slate-400">
-          <span class="font-bold text-indigo-300"><i class="fa-solid fa-sliders"></i> پنل برش:</span>
-          <span id="audioDurationLabel" class="font-mono text-slate-400">00:00.0</span>
-        </div>
-        <div class="relative w-full h-24 bg-slate-950 rounded-xl overflow-hidden border border-slate-800/80">
-          <canvas id="waveformCanvas" class="w-full h-full block"></canvas>
-        </div>
-        <div class="grid grid-cols-2 gap-3 bg-slate-950/60 p-3 rounded-xl border border-slate-800/60">
-          <div>
-            <div class="flex justify-between text-xs text-slate-400 mb-1"><span>شروع:</span><span id="startTimeLabel" class="text-indigo-400 font-bold">00:00.0</span></div>
-            <input type="range" id="startSlider" min="0" max="100" step="0.1" value="0" class="w-full" oninput="updateAudioTrims()">
-          </div>
-          <div>
-            <div class="flex justify-between text-xs text-slate-400 mb-1"><span>پایان:</span><span id="endTimeLabel" class="text-indigo-400 font-bold">00:00.0</span></div>
-            <input type="range" id="endSlider" min="0" max="100" step="0.1" value="100" class="w-full" oninput="updateAudioTrims()">
-          </div>
-        </div>
-        <div class="grid grid-cols-2 gap-3">
-          <div class="bg-slate-950/40 p-3 rounded-xl border border-slate-800/40">
-            <div class="flex justify-between text-xs text-slate-400 mb-1"><span>تقویت ولوم:</span><span id="volLabel" class="text-emerald-400 font-bold">100%</span></div>
-            <input type="range" id="volumeSlider" min="50" max="250" step="5" value="100" class="w-full" oninput="document.getElementById('volLabel').innerText = this.value + '%'">
-          </div>
-          <div class="bg-slate-950/40 p-3 rounded-xl border border-slate-800/40">
-            <div class="flex justify-between text-xs text-slate-400 mb-1"><span>سرعت:</span><span id="speedLabel" class="text-amber-400 font-bold">1.0x</span></div>
-            <input type="range" id="speedSlider" min="0.5" max="2.0" step="0.05" value="1.0" class="w-full" oninput="document.getElementById('speedLabel').innerText = parseFloat(this.value).toFixed(2) + 'x'">
-          </div>
-        </div>
-        <button onclick="toggleAudioPreview()" id="previewBtn" class="w-full py-3 rounded-xl bg-indigo-600 text-sm flex items-center justify-center gap-2">
-          <i id="playIcon" class="fa-solid fa-play"></i> پخش بازه انتخابی
-        </button>
-        <div class="grid grid-cols-2 gap-3 pt-2 border-t border-slate-800">
-          <button onclick="exportAudio('wav')" class="py-3 rounded-xl bg-sky-600 text-xs flex items-center justify-center gap-2"><i class="fa-solid fa-file-waveform"></i> دانلود WAV</button>
-          <button onclick="exportAudio('ogg')" class="py-3 rounded-xl bg-emerald-600 text-xs flex items-center justify-center gap-2"><i class="fa-solid fa-microphone-lines"></i> ویس تلگرام</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- بخش ویدیو -->
-    <div id="videoSection" class="hidden flex flex-col gap-4">
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-        <div onclick="toggleCameraRecord()" class="cursor-pointer bg-slate-900/90 border border-slate-800 p-5 rounded-2xl flex flex-col items-center justify-center text-center gap-3 hover:border-indigo-500/50 transition-all">
-          <div id="camRecordBtn" class="w-16 h-16 rounded-full bg-indigo-600 flex items-center justify-center text-2xl text-white shadow-lg shadow-indigo-600/40">
-            <i id="camRecordIcon" class="fa-solid fa-video"></i>
-          </div>
-          <div>
-            <div id="camStatus" class="font-bold text-sm text-indigo-300">ضبط ویدیوی سلفی دایره‌ای</div>
-            <p id="camTimer" class="text-xs text-slate-400 mt-0.5">روی این کادر ضربه بزنید</p>
-          </div>
-        </div>
-
-        <label class="cursor-pointer bg-slate-900/90 border border-dashed border-slate-800 hover:border-purple-500/60 p-5 rounded-2xl flex flex-col items-center justify-center text-center gap-2 transition-all">
-          <div class="w-12 h-12 rounded-full bg-purple-600/20 flex items-center justify-center">
-            <i class="fa-solid fa-film text-purple-400 text-xl"></i>
-          </div>
-          <div>
-            <div class="font-semibold text-xs sm:text-sm text-purple-300">تبدیل ویدیو گالری به گرد</div>
-            <p class="text-[11px] text-slate-500 mt-0.5">کراپ ۱:۱ تلگرام</p>
-          </div>
-          <span id="videoFileName" class="text-[11px] text-purple-400 truncate max-w-[200px]">ویدیویی انتخاب نشده</span>
-          <input type="file" id="videoFileInput" accept="video/*" class="hidden" onchange="handleVideoUpload(event)">
-        </label>
-      </div>
-
-      <div id="cameraStreamBox" class="hidden bg-slate-900/90 border border-slate-800 p-4 rounded-2xl flex flex-col items-center gap-3">
-        <div class="relative w-56 h-56 rounded-full overflow-hidden border-4 border-indigo-500 bg-black">
-          <video id="liveVideoPreview" autoplay muted playsinline class="w-full h-full object-cover -scale-x-100"></video>
-        </div>
-        <button onclick="startOrStopRecordingCamera()" id="triggerCamRecBtn" class="py-2.5 px-6 rounded-full bg-rose-600 text-xs flex items-center gap-2">
-          <i class="fa-solid fa-circle-dot"></i> شروع ضبط
-        </button>
-      </div>
-
-      <div id="videoEditorPanel" class="hidden bg-slate-900/90 border border-slate-800 p-4 rounded-2xl flex flex-col items-center gap-4">
-        <div class="w-full flex justify-between text-xs text-slate-400">
-          <span class="font-bold text-purple-300"><i class="fa-solid fa-eye"></i> خروجی ویدیو مسیج:</span>
-          <span id="videoDurationLabel" class="font-mono text-slate-400">00:00</span>
-        </div>
-        
-        <!-- پیش نمایش دایره ای -->
-        <div class="relative w-64 h-64 rounded-full overflow-hidden border-4 border-purple-500 shadow-2xl bg-black">
-          <canvas id="circleVideoCanvas" width="400" height="400" class="w-full h-full object-cover"></canvas>
-        </div>
-        <video id="hiddenRawVideo" playsinline class="hidden"></video>
-
-        <div class="w-full grid grid-cols-2 gap-3 bg-slate-950/60 p-3 rounded-xl border border-slate-800/60">
-          <div>
-            <div class="flex justify-between text-xs text-slate-400 mb-1"><span>شروع:</span><span id="vStartTimeLabel" class="text-purple-400 font-bold">00:00.0</span></div>
-            <input type="range" id="vStartSlider" min="0" max="100" step="0.2" value="0" class="w-full" oninput="updateVideoTrims()">
-          </div>
-          <div>
-            <div class="flex justify-between text-xs text-slate-400 mb-1"><span>پایان:</span><span id="vEndTimeLabel" class="text-purple-400 font-bold">00:00.0</span></div>
-            <input type="range" id="vEndSlider" min="0" max="100" step="0.2" value="100" class="w-full" oninput="updateVideoTrims()">
-          </div>
-        </div>
-
-        <button onclick="toggleVideoPlayback()" id="vPlayBtn" class="w-full py-3 rounded-xl bg-purple-600 text-sm flex items-center justify-center gap-2">
-          <i id="vPlayIcon" class="fa-solid fa-play"></i> تست ویدیوی گرد
-        </button>
-        <button onclick="renderAndDownloadRoundVideo()" id="downloadRoundBtn" class="w-full py-3.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 text-sm font-bold flex items-center justify-center gap-2">
-          <i class="fa-solid fa-cloud-arrow-down"></i> دانلود ویدیوی گرد (آماده تلگرام)
-        </button>
-      </div>
-    </div>
-  </main>
-
-  <footer class="w-full max-w-2xl text-center py-4 border-t border-slate-800/80 text-xs text-slate-500">
-    طراحی شده با افتخار توسط <a href="https://t.me/oajor" target="_blank" class="text-indigo-400 font-semibold hover:underline">oajor@</a>
-  </footer>
-
-  <script>
-    // حذف لودینگ بعد از باز شدن سایت
-    window.addEventListener('load', () => {
-      setTimeout(() => {
-        const h = document.getElementById('heart-overlay');
-        h.style.opacity = '0';
-        setTimeout(() => h.style.display = 'none', 600);
-      }, 1500);
+function initWavesurfer(){
+  if(wavesurfer) wavesurfer.destroy();
+  wavesurfer = WaveSurfer.create({
+    container: '#waveform',
+    waveColor: '#4a5a7a',
+    progressColor: '#766af5',
+    cursorColor: '#38bdf8',
+    barWidth: 2,
+    barGap: 1,
+    height: 140,
+    normalize: true,
+    backend: 'WebAudio'
+  });
+  regionsPlugin = wavesurfer.registerPlugin(WaveSurfer.RegionsPlugin.create());
+  wavesurfer.on('ready', ()=>{
+    const dur = wavesurfer.getDuration();
+    $('audioDuration').textContent = fmt(dur);
+    $('editorPanel').style.display = 'block';
+    $('audioState').textContent = 'فایل بارگذاری شد';
+    // Add default full region
+    if(currentRegion) currentRegion.remove();
+    currentRegion = regionsPlugin.addRegion({
+      start: 0, end: dur, color: 'rgba(117,104,246,0.18)', drag: true, resize: true
     });
+    status('audioStatus','موج صدا آماده است. بازه مورد نظر را روی موج انتخاب کنید.','good');
+  });
+  wavesurfer.on('play', ()=>{isPlaying=true;$('previewBtn').innerHTML='<i class="fa-solid fa-pause"></i> در حال پخش'});
+  wavesurfer.on('pause', ()=>{isPlaying=false;$('previewBtn').innerHTML='<i class="fa-solid fa-play"></i> پخش بازه انتخابی'});
+  wavesurfer.on('finish', ()=>{isPlaying=false;$('previewBtn').innerHTML='<i class="fa-solid fa-play"></i> پخش بازه انتخابی'});
+}
 
-    function switchTab(mode) {
-      const aSec = document.getElementById('audioSection');
-      const vSec = document.getElementById('videoSection');
-      const aBtn = document.getElementById('tabAudioBtn');
-      const vBtn = document.getElementById('tabVideoBtn');
-      if (mode === 'audio') {
-        aSec.classList.remove('hidden'); vSec.classList.add('hidden');
-        aBtn.className = 'py-2.5 rounded-xl font-bold text-xs sm:text-sm flex items-center justify-center gap-2 bg-indigo-600 text-white shadow-md transition-all';
-        vBtn.className = 'py-2.5 rounded-xl font-bold text-xs sm:text-sm flex items-center justify-center gap-2 text-slate-400 hover:text-white transition-all';
-        stopCamera();
-      } else {
-        aSec.classList.add('hidden'); vSec.classList.remove('hidden');
-        vBtn.className = 'py-2.5 rounded-xl font-bold text-xs sm:text-sm flex items-center justify-center gap-2 bg-purple-600 text-white shadow-md transition-all';
-        aBtn.className = 'py-2.5 rounded-xl font-bold text-xs sm:text-sm flex items-center justify-center gap-2 text-slate-400 hover:text-white transition-all';
-        stopAudioPreview();
+function loadAudioBlob(blob, name){
+  if(!wavesurfer) initWavesurfer();
+  wavesurfer.loadBlob(blob);
+  $('audioFilename').textContent = name;
+  $('audioState').textContent = 'در حال بارگذاری...';
+  // Decode for export
+  const ctx = new (window.AudioContext||window.webkitAudioContext)();
+  blob.arrayBuffer().then(ab => ctx.decodeAudioData(ab)).then(buf => { audioBuffer = buf; }).catch(e=>console.error(e));
+}
+
+// ===== Recording =====
+let mediaRecorder=null, recChunks=[], recStream=null, recTimer=null, recSec=0;
+
+$('recordAudio').onclick = async()=>{
+  if(mediaRecorder && mediaRecorder.state==='recording'){
+    mediaRecorder.stop();
+    clearInterval(recTimer);
+    return;
+  }
+  if(!navigator.mediaDevices?.getUserMedia || !window.MediaRecorder){
+    return status('audioStatus','ضبط صدا در این مرورگر موجود نیست.','error');
+  }
+  try{
+    recStream = await navigator.mediaDevices.getUserMedia({audio:true});
+    const mime = MediaRecorder.isTypeSupported('audio/webm;codecs=opus') ? 'audio/webm;codecs=opus' : '';
+    mediaRecorder = new MediaRecorder(recStream, mime?{mimeType:mime}:undefined);
+    recChunks = [];
+    mediaRecorder.ondataavailable = e=>{if(e.data.size) recChunks.push(e.data)};
+    mediaRecorder.onstop = ()=>{
+      const blob = new Blob(recChunks, {type: mediaRecorder.mimeType||'audio/webm'});
+      loadAudioBlob(blob, 'ضبط صدا');
+      recStream.getTracks().forEach(t=>t.stop());
+      $('recordAudioTitle').textContent = 'ضبط صدا';
+      $('recordAudioHint').textContent = 'برای شروع ضبط لمس کنید';
+      $('recordAudioIcon').innerHTML = '<i class="fa-solid fa-microphone"></i>';
+    };
+    mediaRecorder.start(1000);
+    recSec = 0;
+    $('recordAudioTitle').textContent = 'توقف ضبط';
+    $('recordAudioIcon').innerHTML = '<i class="fa-solid fa-stop"></i>';
+    $('recordAudioIcon').style.color = '#fb5577';
+    recTimer = setInterval(()=>{$('recordAudioHint').textContent = fmt(++recSec)}, 1000);
+    status('audioStatus','در حال ضبط صدا...');
+  }catch(e){
+    console.error(e);
+    status('audioStatus','دسترسی میکروفون رد شد.','error');
+  }
+};
+
+// ===== File Upload =====
+$('audioFile').onchange = e=>{
+  const f = e.target.files?.[0];
+  if(!f) return;
+  loadAudioBlob(f, f.name);
+};
+
+// ===== Volume / Speed =====
+$('audioVolume').oninput = ()=>{
+  const v = +$('audioVolume').value;
+  $('audioVolumeOut').textContent = v + '%';
+  if(wavesurfer) wavesurfer.setVolume(v/100);
+};
+$('audioSpeed').oninput = ()=>{
+  const s = +$('audioSpeed').value;
+  $('audioSpeedOut').textContent = s.toFixed(2) + '×';
+  if(wavesurfer) wavesurfer.setPlaybackRate(s);
+};
+
+// ===== Preview / Stop =====
+$('previewBtn').onclick = ()=>{
+  if(!wavesurfer || !currentRegion) return toast('ابتدا یک فایل صوتی انتخاب کنید.');
+  if(isPlaying){ wavesurfer.pause(); return; }
+  const start = currentRegion.start;
+  const end = currentRegion.end;
+  wavesurfer.play(start, end);
+};
+$('stopBtn').onclick = ()=>{ if(wavesurfer) wavesurfer.stop(); };
+
+// ===== WAV Export =====
+function encodeWav(buffer){
+  const ch = buffer.numberOfChannels, n = buffer.length;
+  const buf = new ArrayBuffer(44 + n * ch * 2);
+  const v = new DataView(buf);
+  const str = (p,s)=>{for(let i=0;i<s.length;i++)v.setUint8(p+i,s.charCodeAt(i))};
+  str(0,'RIFF'); v.setUint32(4,36+n*ch*2,true); str(8,'WAVE');
+  str(12,'fmt '); v.setUint32(16,16,true); v.setUint16(20,1,true); v.setUint16(22,ch,true);
+  v.setUint32(24,buffer.sampleRate,true); v.setUint32(28,buffer.sampleRate*ch*2,true);
+  v.setUint16(32,ch*2,true); v.setUint16(34,16,true);
+  str(36,'data'); v.setUint32(40,n*ch*2,true);
+  let p=44;
+  for(let i=0;i<n;i++){
+    for(let k=0;k<ch;k++){
+      let x = Math.max(-1, Math.min(1, buffer.getChannelData(k)[i]));
+      v.setInt16(p, x<0?x*32768:x*32767, true); p+=2;
+    }
+  }
+  return new Blob([buf], {type:'audio/wav'});
+}
+
+function getTrimmedBuffer(buffer, start, end, speed, volume){
+  const rate = buffer.sampleRate;
+  const startSample = Math.floor(start * rate);
+  const endSample = Math.floor(end * rate);
+  const len = Math.floor((endSample - startSample) / speed);
+  const ctx = new (window.OfflineAudioContext||window.webkitOfflineAudioContext)(buffer.numberOfChannels, len, rate);
+  const src = ctx.createBufferSource();
+  src.buffer = buffer;
+  src.playbackRate.value = speed;
+  const gain = ctx.createGain();
+  gain.gain.value = volume;
+  src.connect(gain); gain.connect(ctx.destination);
+  src.start(0, start, end - start);
+  return ctx.startRendering();
+}
+
+$('exportWav').onclick = async()=>{
+  if(!audioBuffer || !currentRegion) return toast('ابتدا فایل صوتی انتخاب کنید.');
+  const btn = $('exportWav'); btn.disabled = true;
+  try{
+    status('audioStatus','در حال رندر WAV...');
+    setMeter('audioMeter', 30);
+    const speed = +$('audioSpeed').value;
+    const vol = +$('audioVolume').value / 100;
+    const rendered = await getTrimmedBuffer(audioBuffer, currentRegion.start, currentRegion.end, speed, vol);
+    setMeter('audioMeter', 85);
+    download(encodeWav(rendered), 'oajor-edited.wav');
+    setMeter('audioMeter', 100);
+    status('audioStatus','فایل WAV ساخته شد.','good');
+  }catch(e){
+    console.error(e);
+    status('audioStatus','ساخت WAV ناموفق بود.','error');
+  }finally{
+    btn.disabled = false;
+    setTimeout(()=>clearMeter('audioMeter'), 1200);
+  }
+};
+
+// ===== MP3 Export (lamejs) =====
+$('exportMp3').onclick = async()=>{
+  if(!audioBuffer || !currentRegion) return toast('ابتدا فایل صوتی انتخاب کنید.');
+  if(typeof lamejs === 'undefined') return status('audioStatus','کتابخانه MP3 بارگذاری نشده است.','error');
+  const btn = $('exportMp3'); btn.disabled = true;
+  try{
+    status('audioStatus','در حال انکود MP3...');
+    setMeter('audioMeter', 20);
+    const speed = +$('audioSpeed').value;
+    const vol = +$('audioVolume').value / 100;
+    const rendered = await getTrimmedBuffer(audioBuffer, currentRegion.start, currentRegion.end, speed, vol);
+    setMeter('audioMeter', 50);
+    
+    const channels = rendered.numberOfChannels;
+    const sampleRate = rendered.sampleRate;
+    const left = rendered.getChannelData(0);
+    const right = channels > 1 ? rendered.getChannelData(1) : null;
+    
+    // Convert Float32 to Int16
+    const toInt16 = (f32) => {
+      const out = new Int16Array(f32.length);
+      for(let i=0;i<f32.length;i++){
+        let s = Math.max(-1, Math.min(1, f32[i]));
+        out[i] = s < 0 ? s * 0x8000 : s * 0x7FFF;
       }
+      return out;
+    };
+    const l16 = toInt16(left);
+    const r16 = right ? toInt16(right) : null;
+    
+    const mp3encoder = new lamejs.Mp3Encoder(channels, sampleRate, 128);
+    const mp3Data = [];
+    const blockSize = 1152;
+    for(let i=0;i<l16.length;i+=blockSize){
+      const lChunk = l16.subarray(i, i+blockSize);
+      const rChunk = r16 ? r16.subarray(i, i+blockSize) : null;
+      const buf = rChunk ? mp3encoder.encodeBuffer(lChunk, rChunk) : mp3encoder.encodeBuffer(lChunk);
+      if(buf.length > 0) mp3Data.push(new Int8Array(buf));
     }
+    const end = mp3encoder.flush();
+    if(end.length > 0) mp3Data.push(new Int8Array(end));
+    
+    setMeter('audioMeter', 95);
+    const blob = new Blob(mp3Data, {type:'audio/mp3'});
+    download(blob, 'oajor-edited.mp3');
+    setMeter('audioMeter', 100);
+    status('audioStatus','فایل MP3 ساخته شد. آماده ارسال در تلگرام.','good');
+  }catch(e){
+    console.error(e);
+    status('audioStatus','ساخت MP3 ناموفق بود.','error');
+  }finally{
+    btn.disabled = false;
+    setTimeout(()=>clearMeter('audioMeter'), 1200);
+  }
+};
 
-    // ========== AUDIO ==========
-    let audioCtx = null, audioBuffer = null, currentSource = null, isAudioPlaying = false;
-    let startTime = 0, endTime = 0, audioRecorder = null, audioChunks = [], isRecordingAudio = false, recSeconds = 0, recInt = null;
+// Cleanup
+window.addEventListener('beforeunload', ()=>{
+  if(wavesurfer) wavesurfer.destroy();
+  if(recStream) recStream.getTracks().forEach(t=>t.stop());
+});
 
-    function initAudioCtx() {
-      if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-      if (audioCtx.state === 'suspended') audioCtx.resume();
-    }
-
-    async function toggleAudioRecording() {
-      if(isRecordingAudio) {
-        audioRecorder.stop(); isRecordingAudio = false; clearInterval(recInt);
-        document.getElementById('recordBtn').classList.remove('pulse-rec', 'bg-red-700');
-        document.getElementById('recordIcon').className = 'fa-solid fa-microphone';
-        document.getElementById('recordStatus').innerText = 'ضبط تکمیل شد';
-        document.getElementById('recordTimer').innerText = 'دوباره ضربه بزنید';
-      } else {
-        try {
-          const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-          audioRecorder = new MediaRecorder(stream); audioChunks = [];
-          audioRecorder.ondataavailable = e => { if (e.data.size > 0) audioChunks.push(e.data); };
-          audioRecorder.onstop = async () => {
-            const blob = new Blob(audioChunks, { type: 'audio/webm' });
-            initAudioCtx();
-            audioBuffer = await audioCtx.decodeAudioData(await blob.arrayBuffer());
-            loadAudio("ویس ضبط‌شده"); stream.getTracks().forEach(t => t.stop());
-          };
-          audioRecorder.start(); isRecordingAudio = true; recSeconds = 0;
-          document.getElementById('recordBtn').classList.add('pulse-rec', 'bg-red-700');
-          document.getElementById('recordIcon').className = 'fa-solid fa-stop';
-          document.getElementById('recordStatus').innerText = 'در حال ضبط... (توقف)';
-          recInt = setInterval(() => {
-            recSeconds++;
-            document.getElementById('recordTimer').innerText = `${String(Math.floor(recSeconds/60)).padStart(2,'0')}:${String(recSeconds%60).padStart(2,'0')}`;
-          }, 1000);
-        } catch(e) { alert('دسترسی میکروفون مسدود است.'); }
-      }
-    }
-
-    async function handleAudioUpload(e) {
-      if(!e.target.files[0]) return;
-      initAudioCtx();
-      document.getElementById('audioTrackName').innerText = e.target.files[0].name;
-      audioBuffer = await audioCtx.decodeAudioData(await e.target.files[0].arrayBuffer());
-      loadAudio(e.target.files[0].name);
-    }
-
-    function loadAudio(name) {
-      startTime = 0; endTime = audioBuffer.duration;
-      document.getElementById('startSlider').max = endTime; document.getElementById('startSlider').value = 0;
-      document.getElementById('endSlider').max = endTime; document.getElementById('endSlider').value = endTime;
-      document.getElementById('audioDurationLabel').innerText = 'مدت: ' + formatSec(endTime);
-      updateAudioTrims(); drawWaveform(); document.getElementById('audioEditorPanel').classList.remove('hidden');
-    }
-
-    function formatSec(s) {
-      return `${String(Math.floor(s/60)).padStart(2,'0')}:${String(Math.floor(s%60)).padStart(2,'0')}.${Math.floor((s%1)*10)}`;
-    }
-
-    function updateAudioTrims() {
-      let s = parseFloat(document.getElementById('startSlider').value);
-      let e = parseFloat(document.getElementById('endSlider').value);
-      if(s >= e) { s = Math.max(0, e-0.2); document.getElementById('startSlider').value = s; }
-      startTime = s; endTime = e;
-      document.getElementById('startTimeLabel').innerText = formatSec(startTime);
-      document.getElementById('endTimeLabel').innerText = formatSec(endTime);
-      drawWaveform(); if(isAudioPlaying) stopAudioPreview();
-    }
-
-    function drawWaveform() {
-      const canvas = document.getElementById('waveformCanvas');
-      const dpr = window.devicePixelRatio || 1;
-      canvas.width = canvas.parentElement.clientWidth * dpr; canvas.height = canvas.parentElement.clientHeight * dpr;
-      const ctx = canvas.getContext('2d'); ctx.scale(dpr, dpr);
-      const w = canvas.parentElement.clientWidth, h = canvas.parentElement.clientHeight;
-      ctx.clearRect(0,0,w,h); if(!audioBuffer) return;
-      const data = audioBuffer.getChannelData(0), step = Math.ceil(data.length/w), amp = h/2;
-      ctx.fillStyle = '#334155';
-      for(let i=0; i<w; i++){
-        let min=1, max=-1;
-        for(let j=0; j<step; j++){ const v=data[i*step+j]; if(v<min)min=v; if(v>max)max=v; }
-        ctx.fillRect(i, (1+min)*amp, 1, Math.max(1,(max-min)*amp));
-      }
-      const sX = (startTime/audioBuffer.duration)*w, eX = (endTime/audioBuffer.duration)*w;
-      ctx.fillStyle = 'rgba(99,102,241,0.35)'; ctx.fillRect(sX,0,eX-sX,h);
-      ctx.fillStyle = '#818cf8'; ctx.fillRect(sX,0,2,h); ctx.fillRect(eX-1,0,2,h);
-    }
-
-    function toggleAudioPreview() {
-      if(isAudioPlaying) { stopAudioPreview(); } else {
-        if(!audioBuffer) return; initAudioCtx(); stopAudioPreview();
-        const speed = parseFloat(document.getElementById('speedSlider').value);
-        currentSource = audioCtx.createBufferSource(); currentSource.buffer = audioBuffer; currentSource.playbackRate.value = speed;
-        const gain = audioCtx.createGain(); gain.gain.value = parseFloat(document.getElementById('volumeSlider').value)/100;
-        currentSource.connect(gain); gain.connect(audioCtx.destination);
-        currentSource.start(0, startTime, endTime-startTime); isAudioPlaying = true;
-        document.getElementById('playIcon').className = 'fa-solid fa-square';
-        document.getElementById('previewBtn').innerHTML = '<i class="fa-solid fa-square"></i> توقف پخش';
-        currentSource.onended = () => stopAudioPreview();
-      }
-    }
-    function stopAudioPreview() {
-      if(currentSource){ try{currentSource.stop()}catch(e){} currentSource.disconnect(); currentSource=null;}
-      isAudioPlaying = false; document.getElementById('playIcon').className = 'fa-solid fa-play';
-      document.getElementById('previewBtn').innerHTML = '<i class="fa-solid fa-play"></i> پخش بازه انتخابی';
-    }
-
-    async function exportAudio(format) {
-      if(!audioBuffer) return; initAudioCtx(); stopAudioPreview();
-      const speed = parseFloat(document.getElementById('speedSlider').value);
-      const offlineCtx = new OfflineAudioContext(audioBuffer.numberOfChannels, Math.ceil(audioBuffer.sampleRate*((endTime-startTime)/speed)), audioBuffer.sampleRate);
-      const src = offlineCtx.createBufferSource(); src.buffer = audioBuffer; src.playbackRate.value = speed;
-      const gain = offlineCtx.createGain(); gain.gain.value = parseFloat(document.getElementById('volumeSlider').value)/100;
-      src.connect(gain); gain.connect(offlineCtx.destination); src.start(0, startTime, endTime-startTime);
-      const rendered = await offlineCtx.startRendering();
-      let n = rendered.numberOfChannels, len = rendered.length*n*2+44, dv = new DataView(new ArrayBuffer(len)), p = 0;
-      const w16=d=>{dv.setUint16(p,d,true);p+=2;}, w32=d=>{dv.setUint32(p,d,true);p+=4;};
-      w32(0x46464952);w32(len-8);w32(0x45564157);w32(0x20746d66);w32(16);w16(1);w16(n);w32(rendered.sampleRate);w32(rendered.sampleRate*2*n);w16(n*2);w16(16);w32(0x61746164);w32(len-p-4);
-      for(let i=0;i<n;i++){ let ch=rendered.getChannelData(i), o=0; while(o<rendered.length){ let s=Math.max(-1,Math.min(1,ch[o])); s=(s<0?s*32768:s*32767)|0; dv.setInt16(p,s,true); p+=2; o++; } }
-      const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([dv.buffer],{type:'audio/wav'}));
-      a.download = format==='ogg'?'voice-oajor.ogg':'audio-oajor.wav'; a.click();
-    }
-
-    // ========== VIDEO ==========
-    let camStream=null, vidRec=null, vidChunks=[], isCamRec=false, rawVid=document.getElementById('hiddenRawVideo');
-    let circCvs=document.getElementById('circleVideoCanvas'), circCtx=circCvs.getContext('2d'), vStart=0, vEnd=0, animId=null;
-
-    async function toggleCameraRecord() {
-      if(document.getElementById('cameraStreamBox').classList.contains('hidden')) {
-        try {
-          camStream = await navigator.mediaDevices.getUserMedia({ video: {facingMode:'user'}, audio:true });
-          document.getElementById('liveVideoPreview').srcObject = camStream;
-          document.getElementById('cameraStreamBox').classList.remove('hidden');
-          document.getElementById('camStatus').innerText = 'دوربین فعال شد';
-        } catch(e) { alert('دسترسی دوربین مسدود است.'); }
-      } else { stopCamera(); }
-    }
-    function stopCamera() {
-      if(camStream){ camStream.getTracks().forEach(t=>t.stop()); camStream=null; }
-      document.getElementById('cameraStreamBox').classList.add('hidden');
-      document.getElementById('camStatus').innerText = 'ضبط ویدیوی سلفی دایره‌ای';
-    }
-    function startOrStopRecordingCamera() {
-      if(!isCamRec) {
-        vidChunks=[]; vidRec=new MediaRecorder(camStream);
-        vidRec.ondataavailable=e=>{if(e.data.size>0)vidChunks.push(e.data);};
-        vidRec.onstop=()=>{ setupVideo(URL.createObjectURL(new Blob(vidChunks,{type:'video/mp4'})), "سلفی"); stopCamera(); };
-        vidRec.start(); isCamRec=true; document.getElementById('triggerCamRecBtn').innerHTML='<i class="fa-solid fa-stop"></i> پایان و ویرایش';
-      } else { vidRec.stop(); isCamRec=false; document.getElementById('triggerCamRecBtn').innerHTML='<i class="fa-solid fa-circle-dot"></i> شروع ضبط'; }
-    }
-
-    function handleVideoUpload(e) {
-      if(!e.target.files[0]) return; document.getElementById('videoFileName').innerText=e.target.files[0].name;
-      setupVideo(URL.createObjectURL(e.target.files[0]), e.target.files[0].name);
-    }
-    function setupVideo(url, title) {
-      rawVid.src=url; rawVid.onloadedmetadata=()=>{
-        vStart=0; vEnd=Math.min(60,rawVid.duration);
-        document.getElementById('vStartSlider').max=rawVid.duration; document.getElementById('vStartSlider').value=0;
-        document.getElementById('vEndSlider').max=rawVid.duration; document.getElementById('vEndSlider').value=vEnd;
-        document.getElementById('videoDurationLabel').innerText='مدت: '+formatSec(rawVid.duration);
-        updateVideoTrims(); document.getElementById('videoEditorPanel').classList.remove('hidden'); renderCircle();
-      };
-    }
-    function updateVideoTrims() {
-      let s=parseFloat(document.getElementById('vStartSlider').value), e=parseFloat(document.getElementById('vEndSlider').value);
-      if(s>=e){s=Math.max(0,e-0.5); document.getElementById('vStartSlider').value=s;}
-      vStart=s; vEnd=e; document.getElementById('vStartTimeLabel').innerText=formatSec(vStart); document.getElementById('vEndTimeLabel').innerText=formatSec(vEnd);
-      rawVid.currentTime=vStart; renderCircle();
-    }
-    function renderCircle() {
-      circCtx.clearRect(0,0,400,400); const minD = Math.min(rawVid.videoWidth, rawVid.videoHeight);
-      circCtx.save(); circCtx.beginPath(); circCtx.arc(200,200,200,0,Math.PI*2); circCtx.clip();
-      circCtx.drawImage(rawVid, (rawVid.videoWidth-minD)/2, (rawVid.videoHeight-minD)/2, minD, minD, 0,0,400,400); circCtx.restore();
-    }
-    function toggleVideoPlayback() {
-      if(rawVid.paused){ rawVid.currentTime=vStart; rawVid.play(); document.getElementById('vPlayBtn').innerHTML='<i class="fa-solid fa-square"></i> توقف'; playLoop(); }
-      else { rawVid.pause(); cancelAnimationFrame(animId); document.getElementById('vPlayBtn').innerHTML='<i class="fa-solid fa-play"></i> تست'; }
-    }
-    function playLoop() {
-      if(!rawVid.paused){ renderCircle(); if(rawVid.currentTime>=vEnd)rawVid.currentTime=vStart; animId=requestAnimationFrame(playLoop); }
-    }
-    async function renderAndDownloadRoundVideo() {
-      rawVid.pause(); cancelAnimationFrame(animId); const btn = document.getElementById('downloadRoundBtn');
-      btn.innerHTML='در حال پردازش...'; btn.disabled=true;
-      const stream=circCvs.captureStream(30); try{if(rawVid.captureStream().getAudioTracks().length)stream.addTrack(rawVid.captureStream().getAudioTracks()[0]);}catch(e){}
-      const rec = new MediaRecorder(stream,{mimeType:'video/webm'}); const ch=[];
-      rec.ondataavailable=e=>{if(e.data.size>0)ch.push(e.data);};
-      rec.onstop=()=>{
-        const a=document.createElement('a'); a.href=URL.createObjectURL(new Blob(ch,{type:'video/mp4'})); a.download='round-video.mp4'; a.click();
-        btn.innerHTML='دانلود ویدیوی گرد'; btn.disabled=false;
-      };
-      rawVid.currentTime=vStart; await rawVid.play(); rec.start();
-      function recLoop(){ if(!rawVid.paused && rawVid.currentTime<vEnd){renderCircle(); requestAnimationFrame(recLoop);}else{rawVid.pause(); rec.stop();} }
-      recLoop();
-    }
-  </script>
+})();
+</script>
 </body>
 </html>
